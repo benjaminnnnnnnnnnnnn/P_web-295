@@ -13,7 +13,7 @@ const sequelize = new Sequelize(
 		logging: false,
 	}
 );
-import { products } from "./mock-product.mjs";
+import { products } from "./mock-livre.mjs";
 // Le modèle product
 const User = UserModel(sequelize, DataTypes);
 const Product = ProductModel(sequelize, DataTypes);
