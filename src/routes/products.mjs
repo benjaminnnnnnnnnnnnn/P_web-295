@@ -1,22 +1,22 @@
 import express from "express";
-import { Product } from "../db/sequelize.mjs";
+import { Ouvrage } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
-const productsRouter = express();
+const OuvragesRouter = express();
 
 /**
 * @swagger
-* /api/products/:
+* /api/Ouvrages/:
 *   get:
-*     tags: [Products]
+*     tags: [Ouvrages]
 *     security:
 *       - bearerAuth: []
-*     summary: Retrieve all products.
-*     description: Retrieve all products. Can be used to populate a select HTML tag.
+*     summary: Retrieve all Ouvrages.
+*     description: Retrieve all Ouvrages. Can be used to populate a select HTML tag.
 *     responses:
 *       200:
-*         description: All products.
+*         description: All Ouvrages.
 *         content:
 *         application/json:
 *           schema:
@@ -27,19 +27,19 @@ const productsRouter = express();
 *                 properties:
 *                   id:
 *                     type: integer
-*                     description: The product ID.
+*                     description: The Ouvrage ID.
 *                     example: 1
 *                   name:
 *                     type: string
-*                     description: The product's name.
+*                     description: The Ouvrage's name.
 *                     example: Big Mac
 *                   price:
 *                     type: number
-*                     description: The product's price.
+*                     description: The Ouvrage's price.
 *                     example: 5.99
 *
 */
-productsRouter.get("/", auth, (req, res) => {
+OuvragesRouter.get("/", auth, (req, res) => {
 	if (req.query.name) {
 		if (req.query.name.length < 2) {
 			const message = `Le terme de la recherche doit contenir au moins 2 caractères`;
@@ -49,19 +49,19 @@ productsRouter.get("/", auth, (req, res) => {
 		if (req.query.limit) {
 			limit = parseInt(req.query.limit);
 		}
-		return Product.findAndCountAll({
+		return Ouvrage.findAndCountAll({
 			where: { name: { [Op.like]: `%${req.query.name}%` } },
 			order: ["name"],
 			limit: limit,
-		}).then((products) => {
-			const message = `Il y a ${products.count} produits qui correspondent au terme de la recherche`;
-			res.json(success(message, products));
+		}).then((Ouvrages) => {
+			const message = `Il y a ${Ouvrages.count} produits qui correspondent au terme de la recherche`;
+			res.json(success(message, Ouvrages));
 		});
 	}
-	Product.findAll({ order: ["name"] })
-		.then((products) => {
+	Ouvrage.findAll({ order: ["name"] })
+		.then((Ouvrages) => {
 			const message = "La liste des produits a bien été récupérée.";
-			res.json(success(message, products));
+			res.json(success(message, Ouvrages));
 		})
 		.catch((error) => {
 			const message =
@@ -70,17 +70,17 @@ productsRouter.get("/", auth, (req, res) => {
 		});
 });
 
-productsRouter.get("/:id", auth, (req, res) => {
-	Product.findByPk(req.params.id)
-		.then((product) => {
-			if (product === null) {
+OuvragesRouter.get("/:id", auth, (req, res) => {
+	Ouvrage.findByPk(req.params.id)
+		.then((Ouvrage) => {
+			if (Ouvrage === null) {
 				const message =
 					"Le produit demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
 				// A noter ici le return pour interrompre l'exécution du code
 				return res.status(404).json({ message });
 			}
-			const message = `Le produit dont l'id vaut ${product.id} a bien été récupéré.`;
-			res.json(success(message, product));
+			const message = `Le produit dont l'id vaut ${Ouvrage.id} a bien été récupéré.`;
+			res.json(success(message, Ouvrage));
 		})
 		.catch((error) => {
 			const message =
@@ -89,13 +89,13 @@ productsRouter.get("/:id", auth, (req, res) => {
 		});
 });
 
-productsRouter.post("/", auth, (req, res) => {
-	Product.create(req.body)
-		.then((createdProduct) => {
+OuvragesRouter.post("/", auth, (req, res) => {
+	Ouvrage.create(req.body)
+		.then((createdOuvrage) => {
 			// Définir un message pour le consommateur de l'API REST
-			const message = `Le produit ${createdProduct.name} a bien été créé !`;
+			const message = `Le produit ${createdOuvrage.name} a bien été créé !`;
 			// Retourner la réponse HTTP en json avec le msg et le produit créé
-			res.json(success(message, createdProduct));
+			res.json(success(message, createdOuvrage));
 		})
 		.catch((error) => {
 			if (error instanceof ValidationError) {
@@ -107,22 +107,22 @@ productsRouter.post("/", auth, (req, res) => {
 		});
 });
 
-productsRouter.delete("/:id", auth, (req, res) => {
-	Product.findByPk(req.params.id)
-		.then((deletedProduct) => {
-			if (deletedProduct === null) {
+OuvragesRouter.delete("/:id", auth, (req, res) => {
+	Ouvrage.findByPk(req.params.id)
+		.then((deletedOuvrage) => {
+			if (deletedOuvrage === null) {
 				const message =
 					"Le produit demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
 				// A noter ici le return pour interrompre l'exécution du code
 				return res.status(404).json({ message });
 			}
-			return Product.destroy({
-				where: { id: deletedProduct.id },
+			return Ouvrage.destroy({
+				where: { id: deletedOuvrage.id },
 			}).then((_) => {
 				// Définir un message pour le consommateur de l'API REST
-				const message = `Le produit ${deletedProduct.name} a bien été supprimé !`;
+				const message = `Le produit ${deletedOuvrage.name} a bien été supprimé !`;
 				// Retourner la réponse HTTP en json avec le msg et le produit créé
-				res.json(success(message, deletedProduct));
+				res.json(success(message, deletedOuvrage));
 			});
 		})
 		.catch((error) => {
@@ -132,21 +132,21 @@ productsRouter.delete("/:id", auth, (req, res) => {
 		});
 });
 
-productsRouter.put("/:id", auth, (req, res) => {
-	const productId = req.params.id;
-	Product.update(req.body, { where: { id: productId } })
+OuvragesRouter.put("/:id", auth, (req, res) => {
+	const OuvrageId = req.params.id;
+	Ouvrage.update(req.body, { where: { id: OuvrageId } })
 		.then((_) => {
-			return Product.findByPk(productId).then((updatedProduct) => {
-				if (updatedProduct === null) {
+			return Ouvrage.findByPk(OuvrageId).then((updatedOuvrage) => {
+				if (updatedOuvrage === null) {
 					const message =
 						"Le produit demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
 					// A noter ici le return pour interrompre l'exécution du code
 					return res.status(404).json({ message });
 				}
 				// Définir un message pour l'utilisateur de l'API REST
-				const message = `Le produit ${updatedProduct.name} dont l'id vaut ${updatedProduct.id} a été mis à jour avec succès !`;
+				const message = `Le produit ${updatedOuvrage.name} dont l'id vaut ${updatedOuvrage.id} a été mis à jour avec succès !`;
 				// Retourner la réponse HTTP en json avec le msg et le produit créé
-				res.json(success(message, updatedProduct));
+				res.json(success(message, updatedOuvrage));
 			});
 		})
 		.catch((error) => {
@@ -156,4 +156,4 @@ productsRouter.put("/:id", auth, (req, res) => {
 		});
 });
 
-export { productsRouter };
+export { OuvragesRouter };

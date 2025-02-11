@@ -12,7 +12,7 @@ app.use(
 swaggerUi.serve,
 swaggerUi.setup(swaggerSpec, { explorer: true })
 );
-
+// connect to db
 import { sequelize, initDb } from "./db/sequelize.mjs";
 sequelize
 	.authenticate()
@@ -31,8 +31,8 @@ app.get("/api/", (req, res) => {
 	res.redirect(`http://localhost:${port}/`);
 });
 
-import { productsRouter } from "./routes/products.mjs";
-app.use("/api/products", productsRouter);
+import { OuvragesRouter } from "./routes/products.mjs";
+app.use("/api/products", OuvragesRouter);
 
 import { loginRouter } from "./routes/login.mjs";
 app.use("/api/login", loginRouter);
