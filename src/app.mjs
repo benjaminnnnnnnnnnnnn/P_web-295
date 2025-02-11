@@ -12,7 +12,7 @@ app.use(
 swaggerUi.serve,
 swaggerUi.setup(swaggerSpec, { explorer: true })
 );
-
+// connect to db
 import { sequelize, initDb } from "./db/sequelize.mjs";
 sequelize
 	.authenticate()
