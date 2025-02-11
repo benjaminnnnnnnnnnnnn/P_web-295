@@ -1,30 +1,20 @@
-let products = [
+let livres = [
 	{
-		id: 1,
-		name: "Big Mac",
-		price: 5.99,
-		created: new Date(),
-	},
-	{
-		id: 2,
-		name: "Mac chicken",
-		price: 4.99,
-		created: new Date(),
-	},
-	{
-		id: 3,
-		name: "cheese burger",
-		price: 11.5,
-		created: new Date(),
-	},
-	{
-		id: 10,
-		name: "Big Tasty",
-		price: 5.99,
-		created: new Date(),
+		idOurage: 1,
+		titre: "Big Mac",
+		nbPages: 5,
+		extrait: "extrait",
+		resume: "resume",
+		nomAuteur: "nomAuteur",
+		prenomAuteur: "prenomAuteur",
+		nomEditeur: "nomEditeur",
+		anneeEdition: 2021,
+		moyenneAppreciation: 5,
+		imageCouverture: "imageCouverture",
+		idCategorie: 1,
 	},
 ];
 
 
 
-export { products };
+export { livres };
