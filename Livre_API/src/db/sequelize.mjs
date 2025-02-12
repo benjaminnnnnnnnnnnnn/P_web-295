@@ -33,7 +33,7 @@ Categorie.hasMany(Ouvrage, { foreignKey: 'idCategorie' });
 
 let initDb = () => {
     return sequelize
-        .sync({ force: true }) // Use alter instead of force
+        .sync({ force: true })
         .then((_) => {
             // Create necessary categories
             return Categorie.bulkCreate([
