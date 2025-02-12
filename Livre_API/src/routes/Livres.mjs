@@ -1,5 +1,5 @@
 import express from "express";
-import { Ouvrage } from "../db/sequelize.mjs";
+import { Ouvrage, Categorie } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
@@ -35,11 +35,11 @@ const OuvragesRouter = express();
 *                     example: Livre 1
 *                   nbPages:
 *                     type: number
-*                     description: The Ouvrage's price.
+*                     description: The Ouvrage's number of pages.
 *                     example: 5
 *                   extrait:
 *                     type: string
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's quote.
 *                     example: extrait
 *                   resume:
 *                     type: string
@@ -47,31 +47,31 @@ const OuvragesRouter = express();
 *                     example: resume
 *                   nomAuteur:
 *                     type: string
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's auter family name.
 *                     example: nomAuteur
 *                   prenomAuteur:
 *                     type: string
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's auter name.
 *                     example: prenomAuteur
 *                   nomEditeur:
 *                     type: string
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's editor name.
 *                     example: nomEditeur
 *                   anneeEdition:
 *                     type: number
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's edition date.
 *                     example: 2021
 *                   moyenneAppreciation:
 *                     type: number
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's global note.
 *                     example: 5
 *                   imageCouverture:
 *                     type: string
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's front cover.
 *                     example: imageCouverture
 *                   idCategorie:
 *                     type: number
-*                     description: The Ouvrage's description.
+*                     description: The Ouvrage's categorie.
 *                     example: 1
 *
 */
@@ -86,6 +86,7 @@ OuvragesRouter.get("/", auth, (req, res) => {
 			limit = parseInt(req.query.limit);
 		}
 		return Ouvrage.findAndCountAll({
+			include: Categorie,
 			where: { titre: { [Op.like]: `%${req.query.titre}%` } },
 			order: ["titre"],
 			limit: limit,
@@ -94,7 +95,7 @@ OuvragesRouter.get("/", auth, (req, res) => {
 			res.json(success(message, Ouvrages));
 		});
 	}
-	Ouvrage.findAll({ order: ["titre"] })
+	Ouvrage.findAll({ include: Categorie, order: ["titre"] })
 		.then((Ouvrages) => {
 			const message = "La liste des livres a bien été récupérée.";
 			res.json(success(message, Ouvrages));
