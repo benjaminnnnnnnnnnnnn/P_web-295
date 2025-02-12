@@ -1,0 +1,46 @@
+body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #409c1c;
+}
+
+.logo {
+    display: flex;
+}
+
+.logoImg {
+    width: 100px
+}
+
+.panier {
+    width: 60px;
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+    background-color: #28840c;
+}
+
+.divmain {
+    padding-top: 100px;
+}
+
+h2 {
+    margin: 40px;
+}
+
+.extendedb {
+    width: 1390px;
+}
