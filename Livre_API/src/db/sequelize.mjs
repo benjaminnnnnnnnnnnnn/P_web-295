@@ -35,12 +35,7 @@ let initDb = () => {
     return sequelize
         .sync({ force: true })
         .then((_) => {
-
-            return Categorie.bulkCreate([
-                { idCategorie: 1, nomCategorie: 'Default Category' },
-            ]);
-        })
-        .then((_) => {
+            importCategorie();
             importOuvrages();
             importUsers();
             importAppercier();
@@ -77,6 +72,14 @@ const importAppercier = () => {
         }).then((apprecier) => console.log(apprecier.toJSON()));
 };
 
+const importCategorie = () => {
+
+    Categorie.bulkCreate([
+        { idCategorie: 1, nomCategorie: 'Default Category' },
+        { idCategorie: 2, nomCategorie: 'Roman policier' },
+    ]).then((categorie) => console.log(categorie));
+};
+
 const importCommenter = () => {
 
     Commenter.create({
@@ -100,4 +103,4 @@ const importUsers = () => {
         .then((user) => console.log(user.toJSON()));
 };
 
-export { sequelize, initDb, Ouvrage, User };
+export { sequelize, initDb, Ouvrage, User, Categorie };
