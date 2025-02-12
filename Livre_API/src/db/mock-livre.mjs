@@ -1,7 +1,7 @@
 let livres = [
 	{
 		idOurage: 1,
-		titre: "Big Mac",
+		titre: "Livre 1",
 		nbPages: 5,
 		extrait: "extrait",
 		resume: "resume",

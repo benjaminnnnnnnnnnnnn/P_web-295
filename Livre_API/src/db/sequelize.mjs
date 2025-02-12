@@ -20,14 +20,14 @@ const sequelize = new Sequelize(
 
 import { livres } from "./mock-livre.mjs";
 
-// Le modèle product
+
 const User = UtilisateurModel(sequelize, DataTypes);
 const Ouvrage = OuvrageModel(sequelize, DataTypes);
 const Apprecier = ApprecierModel(sequelize, DataTypes);
 const Categorie = CategorieModel(sequelize, DataTypes);
 const Commenter = CommenterModel(sequelize, DataTypes);
 
-// Define associations
+//asociation
 Ouvrage.belongsTo(Categorie, { foreignKey: 'idCategorie' });
 Categorie.hasMany(Ouvrage, { foreignKey: 'idCategorie' });
 
@@ -35,21 +35,22 @@ let initDb = () => {
     return sequelize
         .sync({ force: true })
         .then((_) => {
-            // Create necessary categories
+
             return Categorie.bulkCreate([
                 { idCategorie: 1, nomCategorie: 'Default Category' },
-                // Add other categories if needed
             ]);
         })
         .then((_) => {
             importOuvrages();
             importUsers();
+            importAppercier();
+            importCommenter();
             console.log("La base de données db_ouvrages a bien été synchronisée");
         });
 };
 
 const importOuvrages = () => {
-    // import tous les produits présents dans le fichier db/mock-livre.mjs
+
     livres.map((livre) => {
         Ouvrage.create({
             titre: livre.titre,
@@ -67,13 +68,33 @@ const importOuvrages = () => {
     });
 };
 
+const importAppercier = () => {
+
+        Apprecier.create({
+            idOuvrage: 1,
+            idUtilisateur: 1,
+            appreciation: 5,
+        }).then((apprecier) => console.log(apprecier.toJSON()));
+};
+
+const importCommenter = () => {
+
+    Commenter.create({
+        idOuvrage: 1,
+        idUtilisateur: 1,
+        commentaire: "Tres bon livre",
+    }).then((commentaire) => console.log(commentaire.toJSON()));
+};
+
 const importUsers = () => {
     bcrypt
-        .hash("etml", 10) // temps pour hasher = du sel
+        .hash("admin", 10)
         .then((hash) =>
             User.create({
-                username: "etml",
-                password: hash,
+                nomUtilisateur: "admin",
+                mdp: hash,
+                nbPropositions: 0,
+                createdAt: new Date(),
             })
         )
         .then((user) => console.log(user.toJSON()));
