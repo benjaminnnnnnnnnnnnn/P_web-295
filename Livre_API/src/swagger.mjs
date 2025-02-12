@@ -23,26 +23,49 @@ const options = {
 				},
 			},
 			schemas: {
-				Products: {
+				Livres: {
 					type: "object",
-					required: ["name", "price", "created"],
+					required: ["titre", "nbPages", "extrait", "resume", "nomAuteur", "prenomAuteur", "nomEditeur", "anneeEdition", "moyenneAppreciation"],
 					properties: {
-						id: {
+						idOuvrage: {
 							type: "integer",
-							description: "L'identifiant unique du produit.",
+							description: "L'identifiant unique du livre.",
 						},
-						name: {
+						titre: {
 							type: "string",
-							description: "Le nom du produit.",
+							description: "Le nom du livre.",
 						},
-						price: {
-							type: "float",
-							description: "Le prix du produit.",
+						nbPage: {
+							type: "integer",
+							description: "Nombre de pages du livre.",
 						},
-						created: {
+						extrait: {
 							type: "string",
-							format: "date-time",
-							description: "La date et l'heure de l'ajout d'un produit.",
+							description: "extrait du livre.",
+						},
+						resume: {
+							type: "string",
+							description: "resume du livre.",
+						},
+						nomAuteur: {
+							type: "string",
+							description: "nom de l'auteur.",
+						},
+						prenomAuteur: {
+							type: "string",
+							description: "prenom de l'auteur.",
+						},
+						nomEditeur: {
+							type: "string",
+							description: "nom de l'editeur.",
+						},
+						anneeEdition: {
+							type: "integer",
+							description: "année d'édition.",
+						},
+						moyenneAppreciation: {
+							type: "integer",
+							description: "moyenne d'appréciation.",
 						},
 					},
 				},
