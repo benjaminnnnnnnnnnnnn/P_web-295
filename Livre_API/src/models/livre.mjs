@@ -10,7 +10,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		},
 		titre: {
 		  type: DataTypes.STRING(50),
-		  allowNull: true,
+		  allowNull: false,
 		  validate: {
 			notEmpty: {
 			  msg: "Le titre ne peut pas être vide.",
@@ -19,7 +19,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		},
 		nbPages: {
 		  type: DataTypes.INTEGER,
-		  allowNull: true,
+		  allowNull: false,
 		  validate: {
 			isInt: {
 			  msg: "Le nombre de pages doit être un nombre entier.",

@@ -31,8 +31,8 @@ app.get("/api/", (req, res) => {
 	res.redirect(`http://localhost:${port}/`);
 });
 
-import { OuvragesRouter } from "./routes/products.mjs";
-app.use("/api/products", OuvragesRouter);
+import { OuvragesRouter } from "./routes/Livres.mjs";
+app.use("/api/livres", OuvragesRouter);
 
 import { loginRouter } from "./routes/login.mjs";
 app.use("/api/login", loginRouter);
