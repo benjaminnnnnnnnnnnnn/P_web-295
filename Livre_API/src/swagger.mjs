@@ -1,5 +1,6 @@
 // src/swagger.mjs
 import swaggerJSDoc from "swagger-jsdoc";
+import { Categorie } from "./db/sequelize.mjs";
 const options = {
 	definition: {
 		openapi: "3.0.0",
@@ -66,6 +67,48 @@ const options = {
 						moyenneAppreciation: {
 							type: "integer",
 							description: "moyenne d'appréciation.",
+						},
+					},
+				},
+
+				Utilisateurs: {
+					type: "object",
+					required: ["nomUtilisateur", "mdp", "nbPropositions", "createdAt"],
+					properties: {
+						idUtilisateur: {
+							type: "integer",
+							description: "L'identifiant unique de l'utilisateur.",
+						},
+						nomUtilisateur: {
+							type: "string",
+							description: "Le nom de l'utilisateur.",
+						},
+						mdp: {
+							type: "string",
+							description: "Le mot de passe de l'utilisateur.",
+						},
+						nbPropositions: {
+							type: "string",
+							description: "Le nombre de proposition que l'utilisateur a fait.",
+						},
+						createdAt: {
+							type: "datetime",
+							description: "La date et l'heure de création de l'utilisateur.",
+						},
+					},
+				},
+
+				Categories: {
+					type: "object",
+					required: ["nomCategorie"],
+					properties: {
+						idCategorie: {
+							type: "integer",
+							description: "L'identifiant unique de la catégorie.",
+						},
+						nomCategorie: {
+							type: "string",
+							description: "Le nom de la catégorie.",
 						},
 					},
 				},

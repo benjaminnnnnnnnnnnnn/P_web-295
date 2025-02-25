@@ -34,6 +34,9 @@ app.get("/api/", (req, res) => {
 import { OuvragesRouter } from "./routes/Livres.mjs";
 app.use("/api/livres", OuvragesRouter);
 
+import { UserRouter } from "./routes/Utilisateurs.mjs";
+app.use("/api/users", UserRouter);
+
 import { loginRouter } from "./routes/login.mjs";
 app.use("/api/login", loginRouter);
 
