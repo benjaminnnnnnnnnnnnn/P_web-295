@@ -37,6 +37,12 @@ app.use("/api/livres", OuvragesRouter);
 import { UserRouter } from "./routes/Utilisateurs.mjs";
 app.use("/api/users", UserRouter);
 
+import { CategoriesRouter } from "./routes/Categories.mjs";
+app.use("/api/categories", CategoriesRouter);
+
+import { AppreciationRouter } from "./routes/Appreciation.mjs";
+app.use("/api/appreciation", AppreciationRouter);
+
 import { loginRouter } from "./routes/login.mjs";
 app.use("/api/login", loginRouter);
 

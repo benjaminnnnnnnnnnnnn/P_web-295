@@ -21,6 +21,12 @@ const UserRouter = express();
 *         description: Name of the User to search for.
 *         schema:
 *           type: string
+*       - in: query
+*         name: limit
+*         required: false
+*         description: number of categorie to return.
+*         schema:
+*           type: integer
 *     responses:
 *       200:
 *         description: All Users.
@@ -160,6 +166,82 @@ UserRouter.get("/:id", auth, (req, res) => {
         });
 });
 
+/**
+* @swagger
+* /api/users/:
+*   post:
+*     tags: [Utilisateurs]
+*     security:
+*       - bearerAuth: []
+*     summary: add an new user.
+*     description: Add an user. Can be used to populate a select HTML tag.
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/user'
+*     responses:
+*       200:
+*         description: A single User.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 data:
+*                   type: object
+*                   properties:
+*                     idUtilisateur:
+*                       type: integer
+*                       description: The User's ID.
+*                       example: 1
+*                     nomUtilisateur:
+*                       type: string
+*                       description: The User's name.
+*                       example: hida
+*                     mdp:
+*                       type: string
+*                       description: The User's password.
+*                       example: $2b$10$yQJvL8QFiQG8fhTEJxfe9.h42UPRWEnjaOyDXuM/YdGMVU985qici
+*                     nbPropositions:
+*                       type: string
+*                       description: The number of propositions that the user made.
+*                       example: 5
+*                     createdAt:
+*                       type: datetime
+*                       description: The date and time that the user was created.
+*                       example: 2025-02-25 14:47:41
+*       400:
+*         description: Bad request.
+*       500:
+*         description: Internal server error.
+*components:
+*  schemas:
+*    user:
+*      type: object
+*      properties:
+*        nomUtilisateur:
+*          type: string
+*          description: The User's name.
+*          example: hida
+*        mdp:
+*          type: string
+*          description: The User's password.
+*          example: $2b$10$yQJvL8QFiQG8fhTEJxfe9.h42UPRWEnjaOyDXuM/YdGMVU985qici
+*        nbPropositions:
+*          type: string
+*          description: The number of propositions that the user made.
+*          example: 5
+*        createdAt:
+*          type: datetime
+*          description: The date and time that the user was created.
+*          example: 2025-02-25 14:47:41
+*      required:
+*        - nomUtilisateur
+*        - mdp
+*        - nbPropositions
+*        - createdAt
+*/
 UserRouter.post("/", auth, (req, res) => {
 	User.create(req.body)
 		.then((createdUser) => {
@@ -178,6 +260,58 @@ UserRouter.post("/", auth, (req, res) => {
 		});
 });
 
+/**
+* @swagger
+* /api/users/{id}:
+*   delete:
+*     tags: [Utilisateurs]
+*     security:
+*       - bearerAuth: []
+*     summary: destroy a User by ID.
+*     description: destroy a single User by their ID.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the User to destroy.
+*         schema:
+*           type: integer
+*     responses:
+*       200:
+*         description: A single User.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 data:
+*                   type: object
+*                   properties:
+*                     idUtilisateur:
+*                       type: integer
+*                       description: The User's ID.
+*                       example: 1
+*                     nomUtilisateur:
+*                       type: string
+*                       description: The User's name.
+*                       example: hida
+*                     mdp:
+*                       type: string
+*                       description: The User's password.
+*                       example: $2b$10$yQJvL8QFiQG8fhTEJxfe9.h42UPRWEnjaOyDXuM/YdGMVU985qici
+*                     nbPropositions:
+*                       type: string
+*                       description: The number of propositions that the user made.
+*                       example: 5
+*                     createdAt:
+*                       type: datetime
+*                       description: The date and time that the user was created.
+*                       example: 2025-02-25 14:47:41
+*       404:
+*         description: User not found.
+*       500:
+*         description: Internal server error.
+*/
 UserRouter.delete("/:id", auth, (req, res) => {
 	User.findByPk(req.params.id)
 		.then((deletedUser) => {
@@ -203,6 +337,89 @@ UserRouter.delete("/:id", auth, (req, res) => {
 		});
 });
 
+/**
+* @swagger
+* /api/users/{id}:
+*   put:
+*     tags: [Utilisateurs]
+*     security:
+*       - bearerAuth: []
+*     summary: update an user.
+*     description: update an user using thier id. Can be used to populate a select HTML tag.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the User to update.
+*         schema:
+*           type: integer
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/user'
+*     responses:
+*       200:
+*         description: A single User.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 data:
+*                   type: object
+*                   properties:
+*                     idUtilisateur:
+*                       type: integer
+*                       description: The User's ID.
+*                       example: 1
+*                     nomUtilisateur:
+*                       type: string
+*                       description: The User's name.
+*                       example: hida
+*                     mdp:
+*                       type: string
+*                       description: The User's password.
+*                       example: $2b$10$yQJvL8QFiQG8fhTEJxfe9.h42UPRWEnjaOyDXuM/YdGMVU985qici
+*                     nbPropositions:
+*                       type: string
+*                       description: The number of propositions that the user made.
+*                       example: 5
+*                     createdAt:
+*                       type: datetime
+*                       description: The date and time that the user was created.
+*                       example: 2025-02-25 14:47:41
+*       400:
+*         description: Bad request.
+*       500:
+*         description: Internal server error.
+*components:
+*  schemas:
+*    user:
+*      type: object
+*      properties:
+*        nomUtilisateur:
+*          type: string
+*          description: The User's name.
+*          example: hida
+*        mdp:
+*          type: string
+*          description: The User's password.
+*          example: $2b$10$yQJvL8QFiQG8fhTEJxfe9.h42UPRWEnjaOyDXuM/YdGMVU985qici
+*        nbPropositions:
+*          type: string
+*          description: The number of propositions that the user made.
+*          example: 5
+*        createdAt:
+*          type: datetime
+*          description: The date and time that the user was created.
+*          example: 2025-02-25 14:47:41
+*      required:
+*        - nomUtilisateur
+*        - mdp
+*        - nbPropositions
+*        - createdAt
+*/
 UserRouter.put("/:id", auth, (req, res) => {
 	const idUtilisateur = req.params.id;
 	User.update(req.body, { where: { idUtilisateur: idUtilisateur } })
