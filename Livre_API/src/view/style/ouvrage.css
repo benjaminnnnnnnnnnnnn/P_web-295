@@ -34,12 +34,27 @@ header {
 }
 
 main {
+    color: black;
     display: flex;
-    justify-content: space-around;
+    justify-content: left;
     padding-left: 20%;
     padding-right: 20%;
-    background-color: #28840c;
     min-height: 600px; /* Set a minimum height for the main container */
+}
+
+main div {
+    color: white;
+    background-color: #28840c;
+}
+
+main section {
+    display: flex;
+    justify-content: center;
+}
+
+section div {
+    color: black;
+    background-color: white;
 }
 
 .livre {

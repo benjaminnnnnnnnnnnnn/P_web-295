@@ -6,6 +6,44 @@ import { privateKey } from "../auth/private_key.mjs";
 
 const loginRouter = express();
 
+/**
+* @swagger
+* /api/login/:
+*   post:
+*     tags: [Login]
+*     summary: Login.
+*     description: Login. Can be used to populate a select HTML tag.
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/user'
+*     responses:
+*       200:
+*         description: A single User.
+*       404:
+*         description: User not found.
+*       401:
+*         description: Unauthorized (wrong password).
+*       500:
+*         description: Internal server error.
+*components:
+*  schemas:
+*    user:
+*      type: object
+*      properties:
+*        username:
+*          type: string
+*          description: The User's name.
+*          example: admin
+*        password:
+*          type: string
+*          description: The User's password.
+*          example: admin
+*      required:
+*        - username
+*        - password
+*/
 loginRouter.post("/", (req, res) => {
 
 	User.findOne({ where: { nomUtilisateur: req.body.username } })
