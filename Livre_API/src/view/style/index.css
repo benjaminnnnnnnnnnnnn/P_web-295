@@ -19,12 +19,18 @@ header {
     display: flex;
 }
 
+.h1s {
+    font-size: 20px;
+}
+
 .logoImg {
-    width: 100px
+    width: 100px;
+    margin-left: 20px;
 }
 
 .panier {
     width: 60px;
+    margin-right: 20px;
 }
 
 main {
@@ -33,8 +39,26 @@ main {
     background-color: #28840c;
 }
 
+main section {
+    position: relative;
+    text-align: center;
+}
+
+.texte {
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #409c1c;
+    padding: 20px;
+    border-radius: 100px;
+}
+
 .divmain {
     padding-top: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 
 h2 {
@@ -42,5 +66,7 @@ h2 {
 }
 
 .extendedb {
-    width: 1390px;
+    width: 100%;
+    height: 100%;
+    filter:brightness(50%);
 }

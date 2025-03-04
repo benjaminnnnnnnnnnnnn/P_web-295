@@ -1,0 +1,122 @@
+body {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: white;
+}
+
+a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #409c1c;
+}
+
+.logo {
+    display: flex;
+}
+
+.h1s {
+    font-size: 20px;
+}
+
+.logoImg {
+    width: 100px;
+    margin-left: 20px;
+}
+
+.panier {
+    width: 60px;
+    margin-right: 20px;
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+    padding-left: 20%;
+    padding-right: 20%;
+    background-color: #28840c;
+    min-height: 600px; /* Set a minimum height for the main container */
+}
+
+.livre {
+    width: 350px; /* Reduced from 500px to take less space */
+    height: auto;
+    flex-shrink: 0; /* Prevents the image from shrinking */
+    object-fit: contain;
+}
+
+main section {
+    margin-top: 80px;
+    max-width: 500px; /* Set a maximum width for the text section */
+    overflow: auto; /* Allows scrolling if content overflows */
+    flex: 1; /* Allows this section to grow and fill available space */
+}
+
+main h1 {
+    font-size: 50px;
+}
+
+main p {
+    font-size: 20px;
+}
+
+.extrait {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-height: 400px; /* Set maximum height for long text */
+    overflow-y: auto; /* Add vertical scrolling for overflow */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 1200px) {
+    main {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+        align-items: center;
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    
+    .livre {
+        width: 250px;
+        margin-top: 50px;
+    }
+    
+    main section {
+        text-align: center;
+        margin-top: 30px;
+        max-width: 90%;
+    }
+}
+
+.livre {
+   width: 500px;
+    margin-top: 100px
+}
+
+.divmain {
+    padding-top: 100px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+h2 {
+    margin: 40px;
+}
+
+.extendedb {
+    width: 100%;
+    height: 100%;
+    filter:brightness(50%);
+}
