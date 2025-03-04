@@ -4,7 +4,7 @@ import { privateKey } from "./private_key.mjs";
 const auth = (req, res, next) => {
 	const authorizationHeader = req.headers.authorization;
 	if (!authorizationHeader) {
-		const message = `Vous n'avez pas fourni de jeton d'authentification. Ajoutez-en un dans l'en-tête de la requête.`;
+		const message = `You havent provided the authentification token. Add it in the request header.`;
 		return res.status(401).json({ message });
 	} else {
 		const token = authorizationHeader.split(" ")[1];
@@ -13,7 +13,7 @@ const auth = (req, res, next) => {
 			privateKey,
 			(error, decodedToken) => {
 				if (error) {
-					const message = `L'utilisateur n'est pas autorisé à accéder à cette ressource.`;
+					const message = `The user is not authorised to access this ressource.`;
 					return res.status(401).json({ message, data: error });
 				}
 				const userId = decodedToken.userId;
