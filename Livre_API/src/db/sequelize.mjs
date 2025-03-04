@@ -66,6 +66,7 @@ const importOuvrages = () => {
 const importAppercier = () => {
 
         Apprecier.create({
+            id: 0,
             idOuvrage: 1,
             idUtilisateur: 1,
             appreciation: 5,
@@ -103,4 +104,4 @@ const importUsers = () => {
         .then((user) => console.log(user.toJSON()));
 };
 
-export { sequelize, initDb, Ouvrage, User, Categorie };
+export { sequelize, initDb, Ouvrage, User, Categorie, Apprecier, Commenter };

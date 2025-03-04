@@ -14,6 +14,19 @@ const OuvragesRouter = express();
 *       - bearerAuth: []
 *     summary: Retrieve all Ouvrages.
 *     description: Retrieve all Ouvrages. Can be used to populate a select HTML tag.
+*     parameters:
+*       - in: query
+*         titre: titre
+*         required: false
+*         description: title of the book to search for.
+*         schema:
+*           type: string
+*       - in: query
+*         name: limit
+*         required: false
+*         description: number of categorie to return.
+*         schema:
+*           type: integer
 *     responses:
 *       200:
 *         description: All Ouvrages.
@@ -106,7 +119,83 @@ OuvragesRouter.get("/", auth, (req, res) => {
 			res.status(500).json({ message, data: error });
 		});
 });
-
+/**
+* @swagger
+* /api/Livres/{id}:
+*   get:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Retrieve all Ouvrages.
+*     description: Retrieve all Ouvrages. Can be used to populate a select HTML tag.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the User to retrieve.
+*         schema:
+*           type: integer
+*     responses:
+*       200:
+*         description: All Ouvrages.
+*         content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               data:
+*                 type: object
+*                 properties:
+*                   idOuvrage:
+*                     type: integer
+*                     description: The Ouvrage ID.
+*                     example: 1
+*                   titre:
+*                     type: string
+*                     description: The Ouvrage's name.
+*                     example: Livre 1
+*                   nbPages:
+*                     type: number
+*                     description: The Ouvrage's number of pages.
+*                     example: 5
+*                   extrait:
+*                     type: string
+*                     description: The Ouvrage's quote.
+*                     example: extrait
+*                   resume:
+*                     type: string
+*                     description: The Ouvrage's description.
+*                     example: resume
+*                   nomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter family name.
+*                     example: nomAuteur
+*                   prenomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter name.
+*                     example: prenomAuteur
+*                   nomEditeur:
+*                     type: string
+*                     description: The Ouvrage's editor name.
+*                     example: nomEditeur
+*                   anneeEdition:
+*                     type: number
+*                     description: The Ouvrage's edition date.
+*                     example: 2021
+*                   moyenneAppreciation:
+*                     type: number
+*                     description: The Ouvrage's global note.
+*                     example: 5
+*                   imageCouverture:
+*                     type: string
+*                     description: The Ouvrage's front cover.
+*                     example: imageCouverture
+*                   idCategorie:
+*                     type: number
+*                     description: The Ouvrage's categorie.
+*                     example: 1
+*
+*/
 OuvragesRouter.get("/:id", auth, (req, res) => {
 	Ouvrage.findByPk(req.params.id)
 		.then((Ouvrage) => {
@@ -126,6 +215,133 @@ OuvragesRouter.get("/:id", auth, (req, res) => {
 		});
 });
 
+/**
+* @swagger
+* /api/Livres/:
+*   post:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Retrieve all Ouvrages.
+*     description: Retrieve all Ouvrages. Can be used to populate a select HTML tag.
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/Ouvrage'
+*     responses:
+*       200:
+*         description: All Ouvrages.
+*         content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               data:
+*                 type: object
+*                 properties:
+*                   idOuvrage:
+*                     type: integer
+*                     description: The Ouvrage ID.
+*                     example: 1
+*                   titre:
+*                     type: string
+*                     description: The Ouvrage's name.
+*                     example: Livre 1
+*                   nbPages:
+*                     type: number
+*                     description: The Ouvrage's number of pages.
+*                     example: 5
+*                   extrait:
+*                     type: string
+*                     description: The Ouvrage's quote.
+*                     example: extrait
+*                   resume:
+*                     type: string
+*                     description: The Ouvrage's description.
+*                     example: resume
+*                   nomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter family name.
+*                     example: nomAuteur
+*                   prenomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter name.
+*                     example: prenomAuteur
+*                   nomEditeur:
+*                     type: string
+*                     description: The Ouvrage's editor name.
+*                     example: nomEditeur
+*                   anneeEdition:
+*                     type: number
+*                     description: The Ouvrage's edition date.
+*                     example: 2021
+*                   moyenneAppreciation:
+*                     type: number
+*                     description: The Ouvrage's global note.
+*                     example: 5
+*                   imageCouverture:
+*                     type: string
+*                     description: The Ouvrage's front cover.
+*                     example: imageCouverture
+*                   idCategorie:
+*                     type: number
+*                     description: The Ouvrage's categorie.
+*                     example: 1
+*components:
+*  schemas:
+*    Ouvrage:
+*      type: object
+*      properties:
+*        titre:
+*          type: string
+*          description: The Ouvrage's name.
+*          example: Livre 1
+*        nbPages:
+*          type: number
+*          description: The Ouvrage's number of pages.
+*          example: 5
+*        extrait:
+*          type: string
+*          description: The Ouvrage's quote.
+*          example: extrait
+*        resume:
+*          type: string
+*          description: The Ouvrage's description.
+*          example: resume
+*        nomAuteur:
+*          type: string
+*          description: The Ouvrage's auter family name.
+*          example: nomAuteur
+*        prenomAuteur:
+*          type: string
+*          description: The Ouvrage's auter name.
+*          example: prenomAuteur
+*        nomEditeur:
+*          type: string
+*          description: The Ouvrage's editor name.
+*          example: nomEditeur
+*        anneeEdition:
+*          type: number
+*          description: The Ouvrage's edition date.
+*          example: 2021
+*        moyenneAppreciation:
+*          type: number
+*          description: The Ouvrage's global note.
+*          example: 5
+*        imageCouverture:
+*          type: string
+*          description: The Ouvrage's front cover.
+*          example: imageCouverture
+*        idCategorie:
+*          type: number
+*          description: The Ouvrage's categorie.
+*          example: 1
+*      required:
+*        - titre
+*        - nbPages
+*        - idCategorie
+*/
 OuvragesRouter.post("/", auth, (req, res) => {
 	Ouvrage.create(req.body)
 		.then((createdOuvrage) => {
@@ -144,6 +360,83 @@ OuvragesRouter.post("/", auth, (req, res) => {
 		});
 });
 
+/**
+* @swagger
+* /api/Livres/{id}:
+*   delete:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: delte an Ouvrages.
+*     description: delete an Ouvrages using the Ouvrage id. Can be used to populate a select HTML tag.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the Ouvrage to destroy.
+*         schema:
+*           type: integer
+*     responses:
+*       200:
+*         description: All Ouvrages.
+*         content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               data:
+*                 type: object
+*                 properties:
+*                   idOuvrage:
+*                     type: integer
+*                     description: The Ouvrage ID.
+*                     example: 1
+*                   titre:
+*                     type: string
+*                     description: The Ouvrage's name.
+*                     example: Livre 1
+*                   nbPages:
+*                     type: number
+*                     description: The Ouvrage's number of pages.
+*                     example: 5
+*                   extrait:
+*                     type: string
+*                     description: The Ouvrage's quote.
+*                     example: extrait
+*                   resume:
+*                     type: string
+*                     description: The Ouvrage's description.
+*                     example: resume
+*                   nomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter family name.
+*                     example: nomAuteur
+*                   prenomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter name.
+*                     example: prenomAuteur
+*                   nomEditeur:
+*                     type: string
+*                     description: The Ouvrage's editor name.
+*                     example: nomEditeur
+*                   anneeEdition:
+*                     type: number
+*                     description: The Ouvrage's edition date.
+*                     example: 2021
+*                   moyenneAppreciation:
+*                     type: number
+*                     description: The Ouvrage's global note.
+*                     example: 5
+*                   imageCouverture:
+*                     type: string
+*                     description: The Ouvrage's front cover.
+*                     example: imageCouverture
+*                   idCategorie:
+*                     type: number
+*                     description: The Ouvrage's categorie.
+*                     example: 1
+*
+*/
 OuvragesRouter.delete("/:id", auth, (req, res) => {
 	Ouvrage.findByPk(req.params.id)
 		.then((deletedOuvrage) => {
@@ -169,6 +462,140 @@ OuvragesRouter.delete("/:id", auth, (req, res) => {
 		});
 });
 
+/**
+* @swagger
+* /api/Livres/{id}:
+*   put:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Retrieve all Ouvrages.
+*     description: Retrieve all Ouvrages. Can be used to populate a select HTML tag.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the Ouvrage to update.
+*         schema:
+*           type: integer
+*     requestBody:
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/Ouvrage'
+*     responses:
+*       200:
+*         description: All Ouvrages.
+*         content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               data:
+*                 type: object
+*                 properties:
+*                   idOuvrage:
+*                     type: integer
+*                     description: The Ouvrage ID.
+*                     example: 1
+*                   titre:
+*                     type: string
+*                     description: The Ouvrage's name.
+*                     example: Livre 1
+*                   nbPages:
+*                     type: number
+*                     description: The Ouvrage's number of pages.
+*                     example: 5
+*                   extrait:
+*                     type: string
+*                     description: The Ouvrage's quote.
+*                     example: extrait
+*                   resume:
+*                     type: string
+*                     description: The Ouvrage's description.
+*                     example: resume
+*                   nomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter family name.
+*                     example: nomAuteur
+*                   prenomAuteur:
+*                     type: string
+*                     description: The Ouvrage's auter name.
+*                     example: prenomAuteur
+*                   nomEditeur:
+*                     type: string
+*                     description: The Ouvrage's editor name.
+*                     example: nomEditeur
+*                   anneeEdition:
+*                     type: number
+*                     description: The Ouvrage's edition date.
+*                     example: 2021
+*                   moyenneAppreciation:
+*                     type: number
+*                     description: The Ouvrage's global note.
+*                     example: 5
+*                   imageCouverture:
+*                     type: string
+*                     description: The Ouvrage's front cover.
+*                     example: imageCouverture
+*                   idCategorie:
+*                     type: number
+*                     description: The Ouvrage's categorie.
+*                     example: 1
+*components:
+*  schemas:
+*    Ouvrage:
+*      type: object
+*      properties:
+*        titre:
+*          type: string
+*          description: The Ouvrage's name.
+*          example: Livre 1
+*        nbPages:
+*          type: number
+*          description: The Ouvrage's number of pages.
+*          example: 5
+*        extrait:
+*          type: string
+*          description: The Ouvrage's quote.
+*          example: extrait
+*        resume:
+*          type: string
+*          description: The Ouvrage's description.
+*          example: resume
+*        nomAuteur:
+*          type: string
+*          description: The Ouvrage's auter family name.
+*          example: nomAuteur
+*        prenomAuteur:
+*          type: string
+*          description: The Ouvrage's auter name.
+*          example: prenomAuteur
+*        nomEditeur:
+*          type: string
+*          description: The Ouvrage's editor name.
+*          example: nomEditeur
+*        anneeEdition:
+*          type: number
+*          description: The Ouvrage's edition date.
+*          example: 2021
+*        moyenneAppreciation:
+*          type: number
+*          description: The Ouvrage's global note.
+*          example: 5
+*        imageCouverture:
+*          type: string
+*          description: The Ouvrage's front cover.
+*          example: imageCouverture
+*        idCategorie:
+*          type: number
+*          description: The Ouvrage's categorie.
+*          example: 1
+*      required:
+*        - titre
+*        - nbPages
+*        - idCategorie
+*/
 OuvragesRouter.put("/:id", auth, (req, res) => {
 	const OuvrageId = req.params.id;
 	Ouvrage.update(req.body, { where: { idOuvrage: OuvrageId } })
