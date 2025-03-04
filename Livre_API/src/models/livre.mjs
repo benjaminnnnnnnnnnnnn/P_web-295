@@ -34,18 +34,6 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  type: DataTypes.STRING(200),
 		  allowNull: true,
 		},
-		nomAuteur: {
-		  type: DataTypes.STRING(50),
-		  allowNull: true,
-		},
-		prenomAuteur: {
-		  type: DataTypes.STRING(50),
-		  allowNull: true,
-		},
-		nomEditeur: {
-		  type: DataTypes.STRING(50),
-		  allowNull: true,
-		},
 		anneeEdition: {
 		  type: DataTypes.INTEGER,
 		  allowNull: true,

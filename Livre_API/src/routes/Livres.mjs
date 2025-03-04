@@ -346,7 +346,7 @@ OuvragesRouter.post("/", auth, (req, res) => {
 	Ouvrage.create(req.body)
 		.then((createdOuvrage) => {
 			// Définir un message pour le consommateur de l'API REST
-			const message = `Le livre ${createdOuvrage.name} a bien été créé !`;
+			const message = `Le livre ${createdOuvrage.titre} a bien été créé !`;
 			// Retourner la réponse HTTP en json avec le msg et le livre créé
 			res.json(success(message, createdOuvrage));
 		})

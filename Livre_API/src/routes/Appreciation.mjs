@@ -1,4 +1,4 @@
-import express from "express";
+import express, { application } from "express";
 import { Apprecier } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
@@ -57,7 +57,7 @@ AppreciationRouter.get("/", auth, (req, res) => {
 });
 /**
 * @swagger
-* /api/Appreciation/{id}:
+* /api/Appreciation/{idUser}/{idOuvrage}:
 *   get:
 *     tags: [Appreciation]
 *     security:
@@ -66,17 +66,23 @@ AppreciationRouter.get("/", auth, (req, res) => {
 *     description: find Appreciation by id. Can be used to populate a select HTML tag.
 *     parameters:
 *       - in: path
-*         name: id
+*         name: idUser
 *         required: true
-*         description: id of the appreciation tu search for.
+*         description: id of the user appreciation tu search for.
+*         schema:
+*           type: integer
+*       - in: path
+*         name: idOuvrage
+*         required: true
+*         description: id of the ouvrage appreciation tu search for.
 *         schema:
 *           type: integer
 *     responses:
 *       200:
 *         description: All Appreciation.
 */
-AppreciationRouter.get("/:id", auth, (req, res) => {
-	Apprecier.findByPk(req.params.id)
+AppreciationRouter.get("/:idUser/:idOuvrage", auth, (req, res) => {
+	Apprecier.findOne({ where: { idUtilisateur: req.params.idUser, idOuvrage: req.params.idOuvrage } })
     .then((Apprecier) => {
 			if (Apprecier === null) {
 				const message =
@@ -84,7 +90,7 @@ AppreciationRouter.get("/:id", auth, (req, res) => {
 				// A noter ici le return pour interrompre l'exécution du code
 				return res.status(404).json({ message });
 			}
-			const message = `Le Apprecier dont l'id vaut ${Apprecier.id} a bien été récupéré.`;
+			const message = `Le Apprecier dont l'id user vaut ${Apprecier.idUtilisateur} et l'id de l'ouvrage vaut ${Apprecier.idOuvrage} a bien été récupéré.`;
 			res.json(success(message, Apprecier));
 		})
 		.catch((error) => {
@@ -116,10 +122,6 @@ AppreciationRouter.get("/:id", auth, (req, res) => {
 *    Apprecier:
 *      type: object
 *      properties:
-*       id:
-*         type: integer
-*         description: The Apprecier's id.
-*         example: 1
 *       idUtilisateur:
 *         type: integer
 *         description: The Apprecier's idUtilisateur.
@@ -138,36 +140,25 @@ AppreciationRouter.get("/:id", auth, (req, res) => {
 *        - appreciation
 */
 AppreciationRouter.post("/", auth, (req, res) => {
-    Apprecier.findAll({
-        where: { idUtilisateur: req.body.idUtilisateur, idOuvrage: req.body.idOuvrage },
-    }).then((Apprecier) => {
-        console.log(Apprecier);
-        if (Apprecier !== null) {
-            const message =
-            `L'utilisateur avec l'id ${req.body.idUtilisateur} a déjà noté l'ouvrage avec l'id ${req.body.idOuvrage}.`;
-        // A noter ici le return pour interrompre l'exécution du code
-        return res.status(404).json({ message });
-        }})
 	Apprecier.create(req.body)
-		.then((createdApprecier) => {
-			// Définir un message pour le consommateur de l'API REST
-			const message = `Le Apprecier avec l'id ${createdApprecier.id} a bien été créé !`;
-			// Retourner la réponse HTTP en json avec le msg et le Apprecier créé
-			res.json(success(message, createdApprecier));
-		})
-		.catch((error) => {
-			if (error instanceof ValidationError) {
-				return res.status(400).json({ message: error.message, data: error });
-			}
-			const message =
-				"Le Apprecier n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
-			res.status(500).json({ message, data: error });
-		});
+	.then((createdAppreciation) => {
+		// Définir un message pour le consommateur de l'API REST
+		const message = `L'apprecation user ${createdAppreciation.idUtilisateur} et l'id de l'ouverage ${createdAppreciation.idOuvrage} a bien été créé !`;
+		// Retourner la réponse HTTP en json avec le msg et l'appreciation créé
+		res.json(success(message, createdAppreciation));
+	})
+	.catch((error) => {
+		if (error instanceof ValidationError) {
+			return res.status(400).json({ message: error.message, data: error });
+		}
+		const message = "L'appreciation n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
+		res.status(500).json({ message, data: error });
+	});
 });
 
 /**
 * @swagger
-* /api/Appreciation/{id}:
+* /api/Appreciation/{idUtilisateur}/{idOuvrage}:
 *   delete:
 *     tags: [Appreciation]
 *     security:
@@ -176,7 +167,13 @@ AppreciationRouter.post("/", auth, (req, res) => {
 *     description: find Appreciation by id. Can be used to populate a select HTML tag.
 *     parameters:
 *       - in: path
-*         name: id
+*         name: idUtilisateur
+*         required: true
+*         description: id of the Apprecier to destroy.
+*         schema:
+*           type: integer
+*       - in: path
+*         name: idOuvrage
 *         required: true
 *         description: id of the Apprecier to destroy.
 *         schema:
@@ -192,8 +189,8 @@ AppreciationRouter.post("/", auth, (req, res) => {
 *         description: internal error.
 *
 */
-AppreciationRouter.delete("/:id", auth, (req, res) => {
-	Apprecier.findByPk(req.params.id)
+AppreciationRouter.delete("/:idUtilisateur/:idOuvrage", auth, (req, res) => {
+	Apprecier.findOne({ where: { idUtilisateur: req.params.idUtilisateur, idOuvrage: req.params.idOuvrage } })
 		.then((deletedApprecier) => {
 			if (deletedApprecier === null) {
 				const message =
@@ -202,10 +199,10 @@ AppreciationRouter.delete("/:id", auth, (req, res) => {
 				return res.status(404).json({ message });
 			}
 			return Apprecier.destroy({
-				where: { idApprecier: deletedApprecier.idApprecier },
+				where: { idUtilisateur: deletedApprecier.idUtilisateur, idOuvrage: deletedApprecier.idOuvrage },
 			}).then((_) => {
 				// Définir un message pour le consommateur de l'API REST
-				const message = `Le Apprecier ${deletedApprecier.nomApprecier} a bien été supprimé !`;
+				const message = `Le Apprecier avec l'user ${deletedApprecier.idUtilisateur} sur l'ouvrage ${deletedApprecier.idOuvrage} a bien été supprimé !`;
 				// Retourner la réponse HTTP en json avec le msg et le Apprecier créé
 				res.json(success(message, deletedApprecier));
 			});
@@ -219,7 +216,7 @@ AppreciationRouter.delete("/:id", auth, (req, res) => {
 
 /**
 * @swagger
-* /api/Appreciation/{id}:
+* /api/Appreciation/{idUtilisateur}/{idOuvrage}:
 *   put:
 *     tags: [Appreciation]
 *     security:
@@ -228,9 +225,15 @@ AppreciationRouter.delete("/:id", auth, (req, res) => {
 *     description: Retrieve all Appreciation. Can be used to populate a select HTML tag.
 *     parameters:
 *       - in: path
-*         name: id
+*         name: idUtilisateur
 *         required: true
-*         description: id of the Apprecier to destroy.
+*         description: id of the Apprecier to update.
+*         schema:
+*           type: integer
+*       - in: path
+*         name: idOuvrage
+*         required: true
+*         description: id of the Apprecier to update.
 *         schema:
 *           type: integer
 *     requestBody:
@@ -249,36 +252,38 @@ AppreciationRouter.delete("/:id", auth, (req, res) => {
 *               data:
 *                 type: object
 *                 properties:
-*                   idApprecier:
+*                   id:
 *                     type: integer
 *                     description: The Apprecier ID.
 *                     example: 1
-*                   nomApprecier:
-*                     type: string
-*                     description: The Apprecier's name.
-*                     example: Apprecier 1
 *components:
 *  schemas:
 *    Apprecier:
 *      type: object
 *      properties:
-*        nomApprecier:
-*          type: string
-*          description: The Apprecier's name.
-*          example: Apprecier 1
-*        idApprecier:
+*        idUtilisateur:
 *          type: integer
-*          description: The Apprecier's id.
+*          description: The Apprecier's idUtilisateur.
 *          example: 1
+*        idOuvrage:
+*          type: integer
+*          description: The Apprecier's idOuvrage.
+*          example: 1
+*        appreciation:
+*          type: integer
+*          description: The Apprecier's Appreciation.
+*          example: 5
 *      required:
-*        - nomApprecier
-*        - idApprecier
+*        - idUtilisateur
+*        - idOuvrage
 */
-AppreciationRouter.put("/:id", auth, (req, res) => {
-	const ApprecierId = req.params.id;
-	Apprecier.update(req.body, { where: { idApprecier: ApprecierId } })
+AppreciationRouter.put("/:idUtilisateur/:idOuvrage", auth, (req, res) => {
+	const ApprecierIdUtilisateur = req.params.idUtilisateur;
+	const ApprecierIdOuvrage = req.params.idOuvrage;
+	Apprecier.update(req.body, { where: { idUtilisateur: ApprecierIdUtilisateur, idOuvrage: ApprecierIdOuvrage } })
 		.then((_) => {
-			return Apprecier.findByPk(ApprecierId).then((updatedApprecier) => {
+			return Apprecier.findOne({ where: { idUtilisateur: ApprecierIdUtilisateur, idOuvrage: ApprecierIdOuvrage } })
+			.then((updatedApprecier) => {
 				if (updatedApprecier === null) {
 					const message =
 						"Le Apprecier demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
@@ -286,7 +291,7 @@ AppreciationRouter.put("/:id", auth, (req, res) => {
 					return res.status(404).json({ message });
 				}
 				// Définir un message pour l'utilisateur de l'API REST
-				const message = `Le Apprecier ${updatedApprecier.nomApprecier} dont l'id vaut ${updatedApprecier.idApprecier} a été mis à jour avec succès !`;
+				const message = `Le Apprecier dont l'id utilisateur vaut ${updatedApprecier.idUtilisateur} et l'id de l'ouvrage vaut ${updatedApprecier.idOuvrage} a été mis à jour avec succès !`;
 				// Retourner la réponse HTTP en json avec le msg et le Apprecier créé
 				res.json(success(message, updatedApprecier));
 			});
