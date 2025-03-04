@@ -2,18 +2,9 @@ const ApprecierModel = (sequelize, DataTypes) => {
     return sequelize.define(
       "Apprecier",
       {
-        id: {
-          type: DataTypes.INTEGER,
-          primaryKey: true,
-          allowNull: false,
-          validate: {
-            notNull: {
-              msg: "L'id est requis.",
-            },
-          },
-        },
         idUtilisateur: {
           type: DataTypes.INTEGER,
+          primaryKey: true,
           allowNull: false,
           validate: {
             notNull: {
@@ -32,6 +23,7 @@ const ApprecierModel = (sequelize, DataTypes) => {
         },
         idOuvrage: {
           type: DataTypes.INTEGER,
+          primaryKey: true,
           allowNull: false,
           validate: {
             notNull: {
