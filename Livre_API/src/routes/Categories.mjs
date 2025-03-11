@@ -1,5 +1,5 @@
 import express from "express";
-import { Categorie } from "../db/sequelize.mjs";
+import { Categorie, Ouvrage } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
@@ -344,5 +344,50 @@ CategoriesRouter.put("/:id", auth, (req, res) => {
 			res.status(500).json({ message, data: error });
 		});
 });
+
+/**
+* @swagger
+* /api/Categories/{id}/Livres:
+*   get:
+*     tags: [Categories]
+*     security:
+*       - bearerAuth: []
+*     summary: find all Ouvrage in a Categorie.
+*     description: find Ouvrage in a Categories by id. Can be used to populate a select HTML tag.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: id of the categorie to search for.
+*         schema:
+*           type: integer
+*     responses:
+*       200:
+*         description: All Categories.
+*
+*/
+CategoriesRouter.get("/:id/Livres", auth, (req, res) => {
+    Categorie.findByPk(req.params.id, { include: Ouvrage })
+        .then((Categorie) => {
+            if (!Categorie) {
+                const message = "La categorie demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+                return res.status(404).json({ message });
+            }
+
+            return Ouvrage.findAll({
+                where: { idCategorie: Categorie.idCategorie },
+                order: [["titre", "ASC"]],
+            }).then((ouvrages) => {
+                const message = `Les livres de la categorie ${Categorie.nomCategorie} ont bien été récupérés.`;
+                res.json(success(message, ouvrages));
+            });
+        })
+        .catch((error) => {
+            const message = "Impossible de récupérer les données. Réessayez plus tard, oui...";
+            res.status(500).json({ message, data: error });
+        });
+});
+
+
 
 export { CategoriesRouter };
