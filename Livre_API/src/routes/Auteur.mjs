@@ -22,7 +22,7 @@ const AuteursRouter = express();
 AuteursRouter.get("/", auth, (req, res) => {
 	Auteur.findAll({})
 		.then((Auteur) => {
-			const message = "La auteur des livres a bien été récupérée.";
+			const message = "La liste des auteur a bien été récupérée.";
 			res.json(success(message, Auteur));
 		})
 		.catch((error) => {

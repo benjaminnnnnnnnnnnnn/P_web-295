@@ -60,6 +60,3 @@ app.use(({ res }) => {
 app.listen(port, () => {
 	console.log(`Example app listening on port http://localhost:${port}`);
 });
-
-import { CommenterRouter } from "./routes/Commenter.mjs";
-app.use("/api/commenter", CommenterRouter);

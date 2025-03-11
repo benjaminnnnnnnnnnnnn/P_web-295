@@ -476,7 +476,7 @@ OuvragesRouter.put("/:id", auth, (req, res) => {
 					return res.status(404).json({ message });
 				}
 				// Définir un message pour l'utilisateur de l'API REST
-				const message = `Le livre ${updatedOuvrage.name} dont l'id vaut ${updatedOuvrage.idOuvrage} a été mis à jour avec succès !`;
+				const message = `Le livre ${updatedOuvrage.titre} dont l'id vaut ${updatedOuvrage.idOuvrage} a été mis à jour avec succès !`;
 				// Retourner la réponse HTTP en json avec le msg et le livre créé
 				res.json(success(message, updatedOuvrage));
 			});

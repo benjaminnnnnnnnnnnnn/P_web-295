@@ -113,6 +113,18 @@ const importUsers = () => {
             })
         )
         .then((user) => console.log(user.toJSON()));
+
+        bcrypt
+        .hash("bouba", 10)
+        .then((hash) =>
+            User.create({
+                nomUtilisateur: "bouba",
+                mdp: hash,
+                nbPropositions: 0,
+                createdAt: new Date(),
+            })
+        )
+        .then((user) => console.log(user.toJSON()));
 };
 
 const importAuteur = () => {
