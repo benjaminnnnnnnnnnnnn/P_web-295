@@ -1,5 +1,5 @@
 import express from "express";
-import { Ouvrage, Categorie } from "../db/sequelize.mjs";
+import { Ouvrage, Categorie, Commenter, User, Apprecier } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
@@ -619,5 +619,147 @@ OuvragesRouter.put("/:id", auth, (req, res) => {
 			res.status(500).json({ message, data: error });
 		});
 });
+
+/**
+* @swagger
+* /api/Livres/{id}/comments:
+*   get:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Retrieve all comments for a specific book.
+*     description: Retrieve all comments associated with a book ID.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the book to retrieve comments for.
+*         schema:
+*           type: integer
+*     responses:
+*       200:
+*         description: All comments for the specified book.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 data:
+*                   type: array
+*                   items:
+*                     type: object
+*                     properties:
+*                       idOuvrage:
+*                         type: integer
+*                         description: The book ID.
+*                         example: 1
+*                       idUtilisateur:
+*                         type: integer
+*                         description: The user ID who made the comment.
+*                         example: 1
+*                       commentaire:
+*                         type: string
+*                         description: The comment text.
+*                         example: "Tres bon livre"
+*/
+OuvragesRouter.get("/:id/comments", auth, (req, res) => {
+	const bookId = req.params.id;
+	
+	// Find the book first to verify it exists
+	Ouvrage.findByPk(bookId)
+	  .then((ouvrage) => {
+		if (ouvrage === null) {
+		  const message = "Le livre demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+		  return res.status(404).json({ message });
+		}
+		
+		// Try to get comments without the User include first to simplify
+		return Commenter.findAll({
+		  where: { idOuvrage: bookId }
+		}).then((comments) => {
+		  const message = comments.length 
+			? `${comments.length} commentaire(s) trouvé(s) pour le livre "${ouvrage.titre}".`
+			: `Aucun commentaire trouvé pour le livre "${ouvrage.titre}".`;
+		  
+		  res.json(success(message, comments));
+		});
+	  })
+	  .catch((error) => {
+		console.error("Error fetching comments:", error);
+		const message = "La liste des commentaires n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+		res.status(500).json({ message, data: error });
+	  });
+  });
+
+  /**
+* @swagger
+* /api/Livres/{id}/appreciations:
+*   get:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Retrieve all appreciations for a specific book.
+*     description: Retrieve all ratings associated with a book ID.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the book to retrieve appreciations for.
+*         schema:
+*           type: integer
+*     responses:
+*       200:
+*         description: All appreciations for the specified book.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 data:
+*                   type: array
+*                   items:
+*                     type: object
+*                     properties:
+*                       idOuvrage:
+*                         type: integer
+*                         description: The book ID.
+*                         example: 1
+*                       idUtilisateur:
+*                         type: integer
+*                         description: The user ID who gave the rating.
+*                         example: 1
+*                       appreciation:
+*                         type: integer
+*                         description: The rating value.
+*                         example: 5
+*/
+OuvragesRouter.get("/:id/appreciations", auth, (req, res) => {
+	const bookId = req.params.id;
+	
+	// Find the book first to verify it exists
+	Ouvrage.findByPk(bookId)
+	  .then((ouvrage) => {
+		if (ouvrage === null) {
+		  const message = "Le livre demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+		  return res.status(404).json({ message });
+		}
+		
+		// Find all appreciations for this book
+		return Apprecier.findAll({
+		  where: { idOuvrage: bookId }
+		}).then((appreciations) => {
+		  const message = appreciations.length 
+			? `${appreciations.length} appréciation(s) trouvée(s) pour le livre "${ouvrage.titre}".`
+			: `Aucune appréciation trouvée pour le livre "${ouvrage.titre}".`;
+		  
+		  res.json(success(message, appreciations));
+		});
+	  })
+	  .catch((error) => {
+		console.error("Error fetching appreciations:", error);
+		const message = "La liste des appréciations n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+		res.status(500).json({ message, data: error });
+	  });
+  });
 
 export { OuvragesRouter };
