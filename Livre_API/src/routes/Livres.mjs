@@ -691,7 +691,7 @@ OuvragesRouter.get("/:id/comments", auth, (req, res) => {
 	  });
   });
 
-  /**
+/**
 * @swagger
 * /api/Livres/{id}/appreciations:
 *   get:
@@ -736,6 +736,9 @@ OuvragesRouter.get("/:id/comments", auth, (req, res) => {
 OuvragesRouter.get("/:id/appreciations", auth, (req, res) => {
 	const bookId = req.params.id;
 	
+	// Add console.log to debug
+	console.log(`Fetching appreciations for book ID: ${bookId}`);
+	
 	// Find the book first to verify it exists
 	Ouvrage.findByPk(bookId)
 	  .then((ouvrage) => {
@@ -744,10 +747,14 @@ OuvragesRouter.get("/:id/appreciations", auth, (req, res) => {
 		  return res.status(404).json({ message });
 		}
 		
-		// Find all appreciations for this book
+		// Find all appreciations for this book - using simpler query without joins for now
+		console.log(`Book "${ouvrage.titre}" found, fetching appreciations...`);
+		
 		return Apprecier.findAll({
 		  where: { idOuvrage: bookId }
 		}).then((appreciations) => {
+		  console.log(`Found ${appreciations.length} appreciations`);
+		  
 		  const message = appreciations.length 
 			? `${appreciations.length} appréciation(s) trouvée(s) pour le livre "${ouvrage.titre}".`
 			: `Aucune appréciation trouvée pour le livre "${ouvrage.titre}".`;
@@ -758,6 +765,208 @@ OuvragesRouter.get("/:id/appreciations", auth, (req, res) => {
 	  .catch((error) => {
 		console.error("Error fetching appreciations:", error);
 		const message = "La liste des appréciations n'a pas pu être récupérée. Merci de réessayer dans quelques instants.";
+		res.status(500).json({ message, data: error });
+	  });
+  });
+
+  /**
+* @swagger
+* /api/Livres/{id}/comments:
+*   post:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Add a comment to a book.
+*     description: Add a new comment to a specific book.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the book to add a comment to.
+*         schema:
+*           type: integer
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               idUtilisateur:
+*                 type: integer
+*                 description: ID of the user making the comment.
+*                 example: 1
+*               commentaire:
+*                 type: string
+*                 description: The content of the comment.
+*                 example: "Un excellent livre que je recommande fortement."
+*             required:
+*               - idUtilisateur
+*               - commentaire
+*     responses:
+*       200:
+*         description: Comment successfully added.
+*         content:
+*           application/json:
+*             schema:
+*               type: object
+*               properties:
+*                 message:
+*                   type: string
+*                   example: "Le commentaire a été ajouté avec succès."
+*                 data:
+*                   type: object
+*                   properties:
+*                     idOuvrage:
+*                       type: integer
+*                       example: 1
+*                     idUtilisateur:
+*                       type: integer
+*                       example: 1
+*                     commentaire:
+*                       type: string
+*                       example: "Un excellent livre que je recommande fortement."
+*       400:
+*         description: Invalid input.
+*       404:
+*         description: Book not found.
+*       500:
+*         description: Server error.
+*/
+OuvragesRouter.post("/:id/comments", auth, (req, res) => {
+	const bookId = req.params.id;
+	
+	// Verify the book exists
+	Ouvrage.findByPk(bookId)
+	  .then((ouvrage) => {
+		if (ouvrage === null) {
+		  const message = "Le livre demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+		  return res.status(404).json({ message });
+		}
+		
+		// Create comment with book ID from path and user ID & comment from body
+		const commentData = {
+		  idOuvrage: bookId,
+		  idUtilisateur: req.body.idUtilisateur,
+		  commentaire: req.body.commentaire
+		};
+		
+		return Commenter.create(commentData)
+		  .then((comment) => {
+			const message = `Le commentaire a été ajouté avec succès au livre "${ouvrage.titre}".`;
+			res.json(success(message, comment));
+		  });
+	  })
+	  .catch((error) => {
+		if (error instanceof ValidationError) {
+		  return res.status(400).json({ message: error.message, data: error });
+		}
+		const message = "Le commentaire n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
+		res.status(500).json({ message, data: error });
+	  });
+  });
+
+/**
+* @swagger
+* /api/Livres/{id}/appreciations:
+*   post:
+*     tags: [Ouvrages]
+*     security:
+*       - bearerAuth: []
+*     summary: Rate a book.
+*     description: Add or update a rating for a specific book.
+*     parameters:
+*       - in: path
+*         name: id
+*         required: true
+*         description: ID of the book to rate.
+*         schema:
+*           type: integer
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               idUtilisateur:
+*                 type: integer
+*                 description: ID of the user rating the book.
+*                 example: 1
+*               appreciation:
+*                 type: integer
+*                 description: Rating value (typically 0-5).
+*                 example: 4
+*             required:
+*               - idUtilisateur
+*               - appreciation
+*     responses:
+*       200:
+*         description: Rating successfully added or updated.
+*       400:
+*         description: Invalid input.
+*       404:
+*         description: Book not found.
+*       500:
+*         description: Server error.
+*/
+OuvragesRouter.post("/:id/appreciations", auth, (req, res) => {
+	const bookId = req.params.id;
+	
+	console.log(`Adding/updating appreciation for book ID: ${bookId}`, req.body);
+	
+	// Verify the book exists
+	Ouvrage.findByPk(bookId)
+	  .then((ouvrage) => {
+		if (ouvrage === null) {
+		  const message = "Le livre demandé n'existe pas. Merci de réessayer avec un autre identifiant.";
+		  return res.status(404).json({ message });
+		}
+		
+		// Validate rating value
+		const ratingValue = parseInt(req.body.appreciation);
+		if (isNaN(ratingValue) || ratingValue < 0 || ratingValue > 5) {
+		  const message = "La note doit être un nombre entier entre 0 et 5.";
+		  return res.status(400).json({ message });
+		}
+		
+		// Check if the user has already rated this book
+		return Apprecier.findOne({
+		  where: {
+			idOuvrage: bookId,
+			idUtilisateur: req.body.idUtilisateur
+		  }
+		}).then((existingRating) => {
+		  if (existingRating) {
+			// Update existing rating
+			return existingRating.update({
+			  appreciation: ratingValue
+			}).then((updatedRating) => {
+			  const message = `Votre note pour le livre "${ouvrage.titre}" a été mise à jour.`;
+			  res.json(success(message, updatedRating));
+			});
+		  } else {
+			// Create new rating
+			const ratingData = {
+			  idOuvrage: bookId,
+			  idUtilisateur: req.body.idUtilisateur,
+			  appreciation: ratingValue
+			};
+			
+			return Apprecier.create(ratingData)
+			  .then((newRating) => {
+				const message = `Votre note pour le livre "${ouvrage.titre}" a été enregistrée.`;
+				res.json(success(message, newRating));
+			  });
+		  }
+		});
+	  })
+	  .catch((error) => {
+		console.error("Error saving appreciation:", error);
+		if (error instanceof ValidationError) {
+		  return res.status(400).json({ message: error.message, data: error });
+		}
+		const message = "La note n'a pas pu être enregistrée. Merci de réessayer dans quelques instants.";
 		res.status(500).json({ message, data: error });
 	  });
   });
