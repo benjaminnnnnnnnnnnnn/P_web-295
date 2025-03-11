@@ -17,6 +17,26 @@ const AuteursRouter = express();
 *     responses:
 *       200:
 *         description: All auteur.
+*         content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               data:
+*                 type: object
+*                 properties:
+*                   idAuteur:
+*                     type: integer
+*                     description: The auteur ID.
+*                     example: 1
+*                   nomAuteur:
+*                     type: string
+*                     description: The auteur name.
+*                     example: "Doe"
+*                   prenomAuteur:
+*                     type: string
+*                     description: The auteur firstname.
+*                     example: "John"
 *
 */
 AuteursRouter.get("/", auth, (req, res) => {
