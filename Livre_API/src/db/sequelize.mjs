@@ -49,22 +49,19 @@ Ouvrage.belongsTo(Auteur, { foreignKey: 'idAuteur' });
 Auteur.hasMany(Ouvrage, { foreignKey: 'idAuteur' });
 Apprecier.belongsTo(User, { foreignKey: 'idUtilisateur', as: 'utilisateur' });
 
+
 let initDb = () => {
     return sequelize
         .sync({ force: true })
         .then((_) => {
-            // First import core data
-            return importCategorie()
-                .then(() => importEditeur())
-                //.then(() => importAuteur())
-                .then(() => importOuvrages())
-                .then(() => importUsers())
-                // Then import relational data that depends on users and books
-                .then(() => importAppercier())
-                .then(() => importCommenter())
-                .then(() => {
-                    console.log("La base de données db_ouvrages a bien été synchronisée");
-                });
+            importCategorie();
+            importEditeur();
+            importAuteur();
+            importOuvrages();
+            importUsers();
+            importAppercier();
+            importCommenter();
+            console.log("La base de données db_ouvrages a bien été synchronisée");
         });
 };
 
@@ -80,6 +77,8 @@ const importOuvrages = () => {
             moyenneAppreciation: livre.moyenneAppreciation,
             imageCouverture: livre.imageCouverture,
             idCategorie: livre.idCategorie,
+            idAuteur: livre.idAuteur,
+            idEditeur: livre.idEditeur,
         }).then((livre) => console.log(livre.toJSON()));
     });
     
@@ -115,6 +114,18 @@ const importUsers = () => {
         .then((hash) =>
             User.create({
                 nomUtilisateur: "admin",
+                mdp: hash,
+                nbPropositions: 0,
+                createdAt: new Date(),
+            })
+        )
+        .then((user) => console.log(user.toJSON()));
+
+        bcrypt
+        .hash("bouba", 10)
+        .then((hash) =>
+            User.create({
+                nomUtilisateur: "bouba",
                 mdp: hash,
                 nbPropositions: 0,
                 createdAt: new Date(),
