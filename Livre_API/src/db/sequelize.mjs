@@ -39,8 +39,8 @@ Categorie.hasMany(Ouvrage, { foreignKey: 'idCategorie' });
 Ouvrage.belongsTo(Editeur, { foreignKey: 'idEditeur' });
 Editeur.hasMany(Ouvrage, { foreignKey: 'idEditeur' });
 
-//Ouvrage.belongsTo(Auteur, { foreignKey: 'idAuteur' });
-//Auteur.hasMany(Ouvrage, { foreignKey: 'idAuteur' });
+Ouvrage.belongsTo(Auteur, { foreignKey: 'idAuteur' });
+Auteur.hasMany(Ouvrage, { foreignKey: 'idAuteur' });
 
 let initDb = () => {
     return sequelize
@@ -48,7 +48,7 @@ let initDb = () => {
         .then((_) => {
             importCategorie();
             importEditeur();
-            //importAuteur();
+            importAuteur();
             importOuvrages();
             importUsers();
             importAppercier();
@@ -69,6 +69,8 @@ const importOuvrages = () => {
             moyenneAppreciation: livre.moyenneAppreciation,
             imageCouverture: livre.imageCouverture,
             idCategorie: livre.idCategorie,
+            idAuteur: livre.idAuteur,
+            idEditeur: livre.idEditeur,
         }).then((livre) => console.log(livre.toJSON()));
     });
 };

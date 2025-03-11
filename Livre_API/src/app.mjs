@@ -47,6 +47,9 @@ app.use("/api/appreciation", AppreciationRouter);
 import { loginRouter } from "./routes/login.mjs";
 app.use("/api/login", loginRouter);
 
+import { AuteursRouter } from "./routes/Auteur.mjs";
+app.use("/api/auteurs", AuteursRouter);
+
 // Si aucune route ne correspondant à l'URL demandée par le consommateur
 app.use(({ res }) => {
 	const message =

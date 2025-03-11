@@ -9,6 +9,8 @@ let livres = [
 		moyenneAppreciation: 5,
 		imageCouverture: "imageCouverture",
 		idCategorie: 1,
+		idAuteur: 1,
+		idEditeur: 1,
 	},
 ];
 

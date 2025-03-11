@@ -86,6 +86,14 @@ const OuvragesRouter = express();
 *                     type: number
 *                     description: The Ouvrage's categorie.
 *                     example: 1
+*                   idAuteur:
+*                     type: number
+*                     description: The Ouvrage's auteur.
+*                     example: 1
+*                   idEditeur:
+*                     type: number
+*                     description: The Ouvrage's editor.
+*                     example: 1
 *
 */
 OuvragesRouter.get("/", auth, (req, res) => {
@@ -194,6 +202,14 @@ OuvragesRouter.get("/", auth, (req, res) => {
 *                     type: number
 *                     description: The Ouvrage's categorie.
 *                     example: 1
+*                   idAuteur:
+*                     type: number
+*                     description: The Ouvrage's auteur.
+*                     example: 1
+*                   idEditeur:
+*                     type: number
+*                     description: The Ouvrage's editor.
+*                     example: 1
 *
 */
 OuvragesRouter.get("/:id", auth, (req, res) => {
@@ -232,62 +248,6 @@ OuvragesRouter.get("/:id", auth, (req, res) => {
 *     responses:
 *       200:
 *         description: All Ouvrages.
-*         content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               data:
-*                 type: object
-*                 properties:
-*                   idOuvrage:
-*                     type: integer
-*                     description: The Ouvrage ID.
-*                     example: 1
-*                   titre:
-*                     type: string
-*                     description: The Ouvrage's name.
-*                     example: Livre 1
-*                   nbPages:
-*                     type: number
-*                     description: The Ouvrage's number of pages.
-*                     example: 5
-*                   extrait:
-*                     type: string
-*                     description: The Ouvrage's quote.
-*                     example: extrait
-*                   resume:
-*                     type: string
-*                     description: The Ouvrage's description.
-*                     example: resume
-*                   nomAuteur:
-*                     type: string
-*                     description: The Ouvrage's auter family name.
-*                     example: nomAuteur
-*                   prenomAuteur:
-*                     type: string
-*                     description: The Ouvrage's auter name.
-*                     example: prenomAuteur
-*                   nomEditeur:
-*                     type: string
-*                     description: The Ouvrage's editor name.
-*                     example: nomEditeur
-*                   anneeEdition:
-*                     type: number
-*                     description: The Ouvrage's edition date.
-*                     example: 2021
-*                   moyenneAppreciation:
-*                     type: number
-*                     description: The Ouvrage's global note.
-*                     example: 5
-*                   imageCouverture:
-*                     type: string
-*                     description: The Ouvrage's front cover.
-*                     example: imageCouverture
-*                   idCategorie:
-*                     type: number
-*                     description: The Ouvrage's categorie.
-*                     example: 1
 *components:
 *  schemas:
 *    Ouvrage:
@@ -337,10 +297,20 @@ OuvragesRouter.get("/:id", auth, (req, res) => {
 *          type: number
 *          description: The Ouvrage's categorie.
 *          example: 1
+*        idAuteur:
+*          type: number
+*          description: The Ouvrage's auteur.
+*          example: 1
+*        idEditeur:
+*          type: number
+*          description: The Ouvrage's editor.
+*          example: 1
 *      required:
 *        - titre
 *        - nbPages
 *        - idCategorie
+*        - idAuteur
+*        - idEditeur
 */
 OuvragesRouter.post("/", auth, (req, res) => {
 	Ouvrage.create(req.body)
@@ -379,62 +349,6 @@ OuvragesRouter.post("/", auth, (req, res) => {
 *     responses:
 *       200:
 *         description: All Ouvrages.
-*         content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               data:
-*                 type: object
-*                 properties:
-*                   idOuvrage:
-*                     type: integer
-*                     description: The Ouvrage ID.
-*                     example: 1
-*                   titre:
-*                     type: string
-*                     description: The Ouvrage's name.
-*                     example: Livre 1
-*                   nbPages:
-*                     type: number
-*                     description: The Ouvrage's number of pages.
-*                     example: 5
-*                   extrait:
-*                     type: string
-*                     description: The Ouvrage's quote.
-*                     example: extrait
-*                   resume:
-*                     type: string
-*                     description: The Ouvrage's description.
-*                     example: resume
-*                   nomAuteur:
-*                     type: string
-*                     description: The Ouvrage's auter family name.
-*                     example: nomAuteur
-*                   prenomAuteur:
-*                     type: string
-*                     description: The Ouvrage's auter name.
-*                     example: prenomAuteur
-*                   nomEditeur:
-*                     type: string
-*                     description: The Ouvrage's editor name.
-*                     example: nomEditeur
-*                   anneeEdition:
-*                     type: number
-*                     description: The Ouvrage's edition date.
-*                     example: 2021
-*                   moyenneAppreciation:
-*                     type: number
-*                     description: The Ouvrage's global note.
-*                     example: 5
-*                   imageCouverture:
-*                     type: string
-*                     description: The Ouvrage's front cover.
-*                     example: imageCouverture
-*                   idCategorie:
-*                     type: number
-*                     description: The Ouvrage's categorie.
-*                     example: 1
 *
 */
 OuvragesRouter.delete("/:id", auth, (req, res) => {
@@ -486,62 +400,6 @@ OuvragesRouter.delete("/:id", auth, (req, res) => {
 *     responses:
 *       200:
 *         description: All Ouvrages.
-*         content:
-*         application/json:
-*           schema:
-*             type: object
-*             properties:
-*               data:
-*                 type: object
-*                 properties:
-*                   idOuvrage:
-*                     type: integer
-*                     description: The Ouvrage ID.
-*                     example: 1
-*                   titre:
-*                     type: string
-*                     description: The Ouvrage's name.
-*                     example: Livre 1
-*                   nbPages:
-*                     type: number
-*                     description: The Ouvrage's number of pages.
-*                     example: 5
-*                   extrait:
-*                     type: string
-*                     description: The Ouvrage's quote.
-*                     example: extrait
-*                   resume:
-*                     type: string
-*                     description: The Ouvrage's description.
-*                     example: resume
-*                   nomAuteur:
-*                     type: string
-*                     description: The Ouvrage's auter family name.
-*                     example: nomAuteur
-*                   prenomAuteur:
-*                     type: string
-*                     description: The Ouvrage's auter name.
-*                     example: prenomAuteur
-*                   nomEditeur:
-*                     type: string
-*                     description: The Ouvrage's editor name.
-*                     example: nomEditeur
-*                   anneeEdition:
-*                     type: number
-*                     description: The Ouvrage's edition date.
-*                     example: 2021
-*                   moyenneAppreciation:
-*                     type: number
-*                     description: The Ouvrage's global note.
-*                     example: 5
-*                   imageCouverture:
-*                     type: string
-*                     description: The Ouvrage's front cover.
-*                     example: imageCouverture
-*                   idCategorie:
-*                     type: number
-*                     description: The Ouvrage's categorie.
-*                     example: 1
 *components:
 *  schemas:
 *    Ouvrage:
@@ -591,10 +449,20 @@ OuvragesRouter.delete("/:id", auth, (req, res) => {
 *          type: number
 *          description: The Ouvrage's categorie.
 *          example: 1
+*        idAuteur:
+*          type: number
+*          description: The Ouvrage's auteur.
+*          example: 1
+*        idEditeur:
+*          type: number
+*          description: The Ouvrage's editor.
+*          example: 1
 *      required:
 *        - titre
 *        - nbPages
 *        - idCategorie
+*        - idAuteur
+*        - idEditeur
 */
 OuvragesRouter.put("/:id", auth, (req, res) => {
 	const OuvrageId = req.params.id;
@@ -619,5 +487,26 @@ OuvragesRouter.put("/:id", auth, (req, res) => {
 			res.status(500).json({ message, data: error });
 		});
 });
+
+
+
+OuvragesRouter.post("/:id/notes", auth, (req, res) => {
+	Ouvrage.create(req.body)
+		.then((createdOuvrage) => {
+			// Définir un message pour le consommateur de l'API REST
+			const message = `Le livre ${createdOuvrage.titre} a bien été créé !`;
+			// Retourner la réponse HTTP en json avec le msg et le livre créé
+			res.json(success(message, createdOuvrage));
+		})
+		.catch((error) => {
+			if (error instanceof ValidationError) {
+				return res.status(400).json({ message: error.message, data: error });
+			}
+			const message =
+				"Le livre n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
+			res.status(500).json({ message, data: error });
+		});
+});
+
 
 export { OuvragesRouter };

@@ -65,6 +65,15 @@ const OuvrageModel = (sequelize, DataTypes) => {
 			},
 		  },
 		},
+		idAuteur: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			validate: {
+			  notNull: {
+				msg: "L'auteur est requise.",
+			  },
+			},
+		  },
 	  },
 	  {
 		tableName: "t_ouvrage",
