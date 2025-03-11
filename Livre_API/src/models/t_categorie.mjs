@@ -27,3 +27,4 @@ const CategorieModel = (sequelize, DataTypes) => {
   
   export { CategorieModel };
   
+  

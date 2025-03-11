@@ -22,7 +22,6 @@ const sequelize = new Sequelize(
 
 import { livres } from "./mock-livre.mjs";
 
-
 const User = UtilisateurModel(sequelize, DataTypes);
 const Ouvrage = OuvrageModel(sequelize, DataTypes);
 const Apprecier = ApprecierModel(sequelize, DataTypes);
@@ -39,8 +38,17 @@ Categorie.hasMany(Ouvrage, { foreignKey: 'idCategorie' });
 Ouvrage.belongsTo(Editeur, { foreignKey: 'idEditeur' });
 Editeur.hasMany(Ouvrage, { foreignKey: 'idEditeur' });
 
+// Association between Ouvrage and Commenter
+Ouvrage.hasMany(Commenter, { foreignKey: 'idOuvrage' });
+
+// Association between User and Commenter
+User.hasMany(Commenter, { foreignKey: 'idUtilisateur' });
+Commenter.belongsTo(User, { foreignKey: 'idUtilisateur', as: 'utilisateur' });
+
 Ouvrage.belongsTo(Auteur, { foreignKey: 'idAuteur' });
 Auteur.hasMany(Ouvrage, { foreignKey: 'idAuteur' });
+Apprecier.belongsTo(User, { foreignKey: 'idUtilisateur', as: 'utilisateur' });
+
 
 let initDb = () => {
     return sequelize
@@ -57,10 +65,10 @@ let initDb = () => {
         });
 };
 
+// Update your import functions to return promises
 const importOuvrages = () => {
-
-    livres.map((livre) => {
-        Ouvrage.create({
+    const promises = livres.map((livre) => {
+        return Ouvrage.create({
             titre: livre.titre,
             nbPages: livre.nbPages,
             extrait: livre.extrait,
@@ -73,28 +81,27 @@ const importOuvrages = () => {
             idEditeur: livre.idEditeur,
         }).then((livre) => console.log(livre.toJSON()));
     });
+    
+    return Promise.all(promises);
 };
 
 const importAppercier = () => {
-
-        Apprecier.create({
-            idOuvrage: 1,
-            idUtilisateur: 1,
-            appreciation: 5,
-        }).then((apprecier) => console.log(apprecier.toJSON()));
+    return Apprecier.create({
+        idOuvrage: 1,
+        idUtilisateur: 1,
+        appreciation: 5,
+    }).then((apprecier) => console.log(apprecier.toJSON()));
 };
 
 const importCategorie = () => {
-
-    Categorie.bulkCreate([
+    return Categorie.bulkCreate([
         { idCategorie: 1, nomCategorie: 'Default Category' },
         { idCategorie: 2, nomCategorie: 'Roman policier' },
     ]).then((categorie) => console.log(categorie));
 };
 
 const importCommenter = () => {
-
-    Commenter.create({
+    return Commenter.create({
         idOuvrage: 1,
         idUtilisateur: 1,
         commentaire: "Tres bon livre",
@@ -102,7 +109,7 @@ const importCommenter = () => {
 };
 
 const importUsers = () => {
-    bcrypt
+    return bcrypt
         .hash("admin", 10)
         .then((hash) =>
             User.create({
@@ -128,8 +135,7 @@ const importUsers = () => {
 };
 
 const importAuteur = () => {
-
-    Auteur.create({
+    return Auteur.create({
         idAuteur: 1,
         nomAuteur: "Stephen",
         prenomAuteur: "King",
@@ -137,8 +143,7 @@ const importAuteur = () => {
 };
 
 const importEditeur = () => {
-
-    Editeur.create({
+    return Editeur.create({
         idEditeur: 1,
         nomEditeur: "distri",
         prenomEditeur: "alexendre",
