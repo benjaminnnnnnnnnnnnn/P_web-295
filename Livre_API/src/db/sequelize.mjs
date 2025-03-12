@@ -54,14 +54,18 @@ let initDb = () => {
     return sequelize
         .sync({ force: true })
         .then((_) => {
-            importCategorie();
-            importEditeur();
-            importAuteur();
-            importOuvrages();
-            importUsers();
-            importAppercier();
-            importCommenter();
-            console.log("La base de données db_ouvrages a bien été synchronisée");
+            // First import core data
+            return importCategorie()
+                .then(() => importEditeur())
+                .then(() => importAuteur())
+                .then(() => importOuvrages())
+                .then(() => importUsers())
+                // Then import relational data that depends on users and books
+                .then(() => importAppercier())
+                .then(() => importCommenter())
+                .then(() => {
+                    console.log("La base de données db_ouvrages a bien été synchronisée");
+                });
         });
 };
 
