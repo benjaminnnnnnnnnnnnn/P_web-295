@@ -54,14 +54,18 @@ let initDb = () => {
     return sequelize
         .sync({ force: true })
         .then((_) => {
-            importCategorie();
-            importEditeur();
-            importAuteur();
-            importOuvrages();
-            importUsers();
-            importAppercier();
-            importCommenter();
-            console.log("La base de données db_ouvrages a bien été synchronisée");
+            // First import core data
+            return importCategorie()
+                .then(() => importEditeur())
+                .then(() => importAuteur())
+                .then(() => importOuvrages())
+                .then(() => importUsers())
+                // Then import relational data that depends on users and books
+                .then(() => importAppercier())
+                .then(() => importCommenter())
+                .then(() => {
+                    console.log("La base de données db_ouvrages a bien été synchronisée");
+                });
         });
 };
 
@@ -108,31 +112,28 @@ const importCommenter = () => {
     }).then((commentaire) => console.log(commentaire.toJSON()));
 };
 
-const importUsers = () => {
-    return bcrypt
-        .hash("admin", 10)
-        .then((hash) =>
-            User.create({
-                nomUtilisateur: "admin",
-                mdp: hash,
-                nbPropositions: 0,
-                createdAt: new Date(),
-            })
-        )
-        .then((user) => console.log(user.toJSON()));
+const importUsers = async () => {
+    try {
+        const users = [
+            { nomUtilisateur: "admin", mdp: "admin" },
+            { nomUtilisateur: "bouba", mdp: "bouba" }
+        ];
 
-        bcrypt
-        .hash("bouba", 10)
-        .then((hash) =>
-            User.create({
-                nomUtilisateur: "bouba",
+        for (const user of users) {
+            const hash = await bcrypt.hash(user.mdp, 10);
+            const newUser = await User.create({
+                nomUtilisateur: user.nomUtilisateur,
                 mdp: hash,
                 nbPropositions: 0,
                 createdAt: new Date(),
-            })
-        )
-        .then((user) => console.log(user.toJSON()));
+            });
+            console.log(newUser.toJSON());
+        }
+    } catch (error) {
+        console.error("Erreur lors de l'importation des utilisateurs:", error);
+    }
 };
+
 
 const importAuteur = () => {
     return Auteur.create({
