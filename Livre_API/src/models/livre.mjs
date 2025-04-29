@@ -44,7 +44,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  },
 		},
 		moyenneAppreciation: {
-		  type: DataTypes.DECIMAL(15, 5),
+		  type: DataTypes.DECIMAL(15, 2),
 		  allowNull: true,
 		  validate: {
 			isDecimal: {
