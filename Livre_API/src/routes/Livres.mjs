@@ -98,7 +98,7 @@ const OuvragesRouter = express();
 */
 OuvragesRouter.get("/", auth, (req, res) => {
 	if (req.query.titre) {
-		if (req.query.titre.length < 2) {
+		if (req.query.titre.length < 1) {
 			const message = `Le terme de la recherche doit contenir au moins 2 caractères`;
 			return res.status(400).json({ message });
 		}
