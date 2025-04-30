@@ -9,7 +9,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  allowNull: false,
 		},
 		titre: {
-		  type: DataTypes.STRING(50),
+		  type: DataTypes.STRING(100),
 		  allowNull: false,
 		  validate: {
 			notEmpty: {
