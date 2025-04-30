@@ -27,11 +27,11 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  },
 		},
 		extrait: {
-		  type: DataTypes.STRING(255),
+		  type: DataTypes.STRING(1000),
 		  allowNull: true,
 		},
 		resume: {
-		  type: DataTypes.STRING(200),
+		  type: DataTypes.STRING(2000),
 		  allowNull: true,
 		},
 		anneeEdition: {
