@@ -102,7 +102,7 @@ OuvragesRouter.get("/", auth, (req, res) => {
 			const message = `Le terme de la recherche doit contenir au moins 2 caractères`;
 			return res.status(400).json({ message });
 		}
-		let limit = 3;
+		let limit = 50;
 		if (req.query.limit) {
 			limit = parseInt(req.query.limit);
 		}

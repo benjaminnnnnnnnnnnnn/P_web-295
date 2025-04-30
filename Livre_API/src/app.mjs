@@ -1,5 +1,5 @@
 import express from "express";
-import cors from "cors"; // <=== CORS, yes yes preciouss!
+import cors from "cors"; 
 import swaggerUi from "swagger-ui-express";
 
 const app = express();
