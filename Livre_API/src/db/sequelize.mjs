@@ -93,9 +93,9 @@ const importAppercier = () => {
 const importCategorie = () => {
   return Categorie.bulkCreate([
     { idCategorie: 1, nomCategorie: "Fantasy" },
-    { idCategorie: 2, nomCategorie: "Jeunesse" },
-    { idCategorie: 3, nomCategorie: "Philosophique" },
-    { idCategorie: 4, nomCategorie: "Roman Existentialiste" },
+    { idCategorie: 2, nomCategorie: "Youth" },
+    { idCategorie: 3, nomCategorie: "Philosophy" },
+    { idCategorie: 4, nomCategorie: "Existentialist Novel" },
   ]).then((categorie) => console.log(categorie));
 };
 
