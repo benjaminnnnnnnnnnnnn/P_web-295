@@ -1,7 +1,8 @@
 import express from "express";
-import { Auteur, Ouvrage } from "../db/sequelize.mjs";
+import { Auteur, Ouvrage} from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { auth } from "../auth/auth.mjs";
+import { Op } from "sequelize";
 
 const AuteursRouter = express();
 
@@ -17,9 +18,52 @@ const AuteursRouter = express();
 *     responses:
 *       200:
 *         description: All auteur.
+*         content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               data:
+*                 type: object
+*                 properties:
+*                   idAuteur:
+*                     type: integer
+*                     description: The auteur ID.
+*                     example: 1
+*                   nomAuteur:
+*                     type: string
+*                     description: The auteur name.
+*                     example: "Doe"
+*                   prenomAuteur:
+*                     type: string
+*                     description: The auteur firstname.
+*                     example: "John"
 *
 */
 AuteursRouter.get("/", auth, (req, res) => {
+    if (req.query.name) {
+		if (req.query.name.length < 1) {
+			const message = `Le terme de la recherche doit contenir au moins 2 caractères`;
+			return res.status(400).json({ message });
+		}
+		let limit = 50;
+		if (req.query.limit) {
+			limit = parseInt(req.query.limit);
+		}
+		return Auteur.findAndCountAll({
+            where: { 
+                [Op.or]: [
+                    { nomAuteur: { [Op.like]: `%${req.query.name}%` } },
+                    { prenomAuteur: { [Op.like]: `%${req.query.name}%` } }
+                ]
+            },            
+			order: ["nomAuteur"],
+			limit: limit,
+		}).then((Auteur) => {
+			const message = `Il y a ${Auteur.count} livre qui correspondent au terme de la recherche`;
+			res.json(success(message, Auteur));
+		});
+	}
 	Auteur.findAll({})
 		.then((Auteur) => {
 			const message = "La liste des auteur a bien été récupérée.";

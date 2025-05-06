@@ -9,7 +9,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  allowNull: false,
 		},
 		titre: {
-		  type: DataTypes.STRING(50),
+		  type: DataTypes.STRING(100),
 		  allowNull: false,
 		  validate: {
 			notEmpty: {
@@ -27,11 +27,11 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  },
 		},
 		extrait: {
-		  type: DataTypes.STRING(255),
+		  type: DataTypes.STRING(1000),
 		  allowNull: true,
 		},
 		resume: {
-		  type: DataTypes.STRING(200),
+		  type: DataTypes.STRING(2000),
 		  allowNull: true,
 		},
 		anneeEdition: {
@@ -44,7 +44,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  },
 		},
 		moyenneAppreciation: {
-		  type: DataTypes.DECIMAL(15, 5),
+		  type: DataTypes.DECIMAL(15, 2),
 		  allowNull: true,
 		  validate: {
 			isDecimal: {
