@@ -3,6 +3,7 @@ import { User } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
+import bcrypt from "bcrypt";
 const UserRouter = express();
 
 /**
@@ -242,23 +243,31 @@ UserRouter.get("/:id", auth, (req, res) => {
 *        - nbPropositions
 *        - createdAt
 */
-UserRouter.post("/", auth, (req, res) => {
-	User.create(req.body)
-		.then((createdUser) => {
-			// Définir un message pour le consommateur de l'API REST
-			const message = `Le utilisateur ${createdUser.nomUtilisateur} a bien été créé !`;
-			// Retourner la réponse HTTP en json avec le msg et le utilisateur créé
-			res.json(success(message, createdUser));
-		})
-		.catch((error) => {
-			if (error instanceof ValidationError) {
-				return res.status(400).json({ message: error.message, data: error });
-			}
-			const message =
-				"Le utilisateur n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
-			res.status(500).json({ message, data: error });
-		});
+UserRouter.post("/", auth, async (req, res) => {
+	try {
+		// Hash the password before saving the user
+		req.body.mdp = await bcrypt.hash(req.body.mdp, 10);
+
+		// Create the user
+		const createdUser = await User.create(req.body);
+
+		// Define the message for the API consumer
+		const message = `L'utilisateur ${createdUser.nomUtilisateur} a bien été créé !`;
+
+		// Return the response in JSON with the message and the created user
+		res.json(success(message, createdUser));
+	} catch (error) {
+		// Handle validation errors
+		if (error instanceof ValidationError) {
+			return res.status(400).json({ message: error.message, data: error });
+		}
+
+		// General error response
+		const message = "L'utilisateur n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
+		res.status(500).json({ message, data: error });
+	}
 });
+
 
 /**
 * @swagger
