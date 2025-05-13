@@ -3,7 +3,9 @@ import { User } from "../db/sequelize.mjs";
 import { success } from "./helper.mjs";
 import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { privateKey } from "../auth/private_key.mjs";
 const UserRouter = express();
 
 /**
@@ -243,7 +245,7 @@ UserRouter.get("/:id", auth, (req, res) => {
 *        - nbPropositions
 *        - createdAt
 */
-UserRouter.post("/", auth, async (req, res) => {
+UserRouter.post("/", async (req, res) => {
 	try {
 		// Hash the password before saving the user
 		req.body.mdp = await bcrypt.hash(req.body.mdp, 10);
@@ -252,10 +254,15 @@ UserRouter.post("/", auth, async (req, res) => {
 		const createdUser = await User.create(req.body);
 
 		// Define the message for the API consumer
+		
+		const token = jwt.sign({ userId: createdUser.idUtilisateur }, privateKey, {
+			expiresIn: "1y",
+		});
 		const message = `L'utilisateur ${createdUser.nomUtilisateur} a bien été créé !`;
+		
+		//return res.json({ message, data: createdUser, token });
 
-		// Return the response in JSON with the message and the created user
-		res.json(success(message, createdUser));
+		res.json(success(message, token));
 	} catch (error) {
 		// Handle validation errors
 		if (error instanceof ValidationError) {
