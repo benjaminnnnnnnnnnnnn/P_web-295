@@ -111,7 +111,7 @@ const importUsers = async () => {
   try {
     const users = [
       { nomUtilisateur: "admin", mdp: "admin" },
-      { nomUtilisateur: "bouba", mdp: "bouba" },
+      { nomUtilisateur: "hida", mdp: "hida" },
     ];
 
     for (const user of users) {

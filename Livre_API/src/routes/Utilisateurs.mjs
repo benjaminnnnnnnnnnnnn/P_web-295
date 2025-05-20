@@ -262,7 +262,7 @@ UserRouter.post("/", async (req, res) => {
 		
 		//return res.json({ message, data: createdUser, token });
 
-		res.json(success(message, token));
+		return res.json({ message, data: createdUser, token });
 	} catch (error) {
 		// Handle validation errors
 		if (error instanceof ValidationError) {
