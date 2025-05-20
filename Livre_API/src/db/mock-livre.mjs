@@ -6,7 +6,7 @@ let livres = [
         extrait: "Un Anneau pour les gouverner tous...",
         resume: "Frodon le Hobbit hérite de l'Anneau Unique et part avec une communauté pour détruire ce mal ancien.",
         anneeEdition: 1954,
-        moyenneAppreciation: 5,
+        moyenneAppreciation: 0,
         imageCouverture: "lotr1.jpg",
         idCategorie: 1,
         idAuteur: 1,

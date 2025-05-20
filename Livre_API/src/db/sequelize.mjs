@@ -53,8 +53,8 @@ let initDb = () => {
         .then(() => importOuvrages())
         .then(() => importUsers())
         // Then import relational data that depends on users and books
-        .then(() => importAppercier())
-        .then(() => importCommenter())
+        //.then(() => importAppercier())
+        //.then(() => importCommenter())
         .then(() => {
           console.log("La base de données db_ouvrages a bien été synchronisée");
         })
