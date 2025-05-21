@@ -10,6 +10,9 @@ app.use(cors({
   credentials: true
 }));
 
+app.use('/public', express.static('public'));
+
+
 app.use(express.json());
 const port = 3000;
 
@@ -19,6 +22,10 @@ app.use(
   swaggerUi.serve,
   swaggerUi.setup(swaggerSpec, { explorer: true })
 );
+
+app.use('/uploads', express.static('uploads'))
+
+app.use('/bookcovers', express.static('public/bookcovers'))
 
 // connect to db
 import { sequelize, initDb } from "./db/sequelize.mjs";

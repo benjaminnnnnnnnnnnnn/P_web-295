@@ -5,6 +5,21 @@ import { ValidationError, Op } from "sequelize";
 import { auth } from "../auth/auth.mjs";
 const OuvragesRouter = express();
 
+import multer from "multer";
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/bookcovers'); // We puts the images here, yes
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Gives it a name, precious
+  }
+});
+
+const upload = multer({ storage: storage });
+
+
+
 /**
 * @swagger
 * /api/Livres/:
@@ -312,23 +327,26 @@ OuvragesRouter.get("/:id", auth, (req, res) => {
 *        - idAuteur
 *        - idEditeur
 */
-OuvragesRouter.post("/", auth, (req, res) => {
-	Ouvrage.create(req.body)
-		.then((createdOuvrage) => {
-			// Définir un message pour le consommateur de l'API REST
-			const message = `Le livre ${createdOuvrage.titre} a bien été créé !`;
-			// Retourner la réponse HTTP en json avec le msg et le livre créé
-			res.json(success(message, createdOuvrage));
-		})
-		.catch((error) => {
-			if (error instanceof ValidationError) {
-				return res.status(400).json({ message: error.message, data: error });
-			}
-			const message =
-				"Le livre n'a pas pu être ajouté. Merci de réessayer dans quelques instants.";
-			res.status(500).json({ message, data: error });
-		});
+OuvragesRouter.post("/", auth, upload.single('imageCouverture'), (req, res) => {
+  const data = {
+    ...req.body,
+    imageCouverture: req.file ? `/public/bookCovers/${req.file.filename}` : null
+  };
+
+  Ouvrage.create(data)
+    .then((createdOuvrage) => {
+      const message = `Le livre ${createdOuvrage.titre} a bien été créé avec une image !`;
+      res.json(success(message, createdOuvrage));
+    })
+    .catch((error) => {
+      if (error instanceof ValidationError) {
+        return res.status(400).json({ message: error.message, data: error });
+      }
+      const message = "Le livre n'a pas pu être ajouté, même avec l'image !";
+      res.status(500).json({ message, data: error });
+    });
 });
+
 
 /**
 * @swagger
@@ -838,5 +856,40 @@ OuvragesRouter.post("/:id/appreciations", auth, (req, res) => {
 		res.status(500).json({ message, data: error });
 	  });
   });
+
+  OuvragesRouter.get("/:id/image", auth, (req, res) => {
+  Ouvrage.findByPk(req.params.id)
+    .then(ouvrage => {
+      if (!ouvrage || !ouvrage.imageCouverture) {
+        return res.status(404).json({ message: "Image not found" });
+      }
+      res.json(success("Image retrieved successfully", { imageCouverture: ouvrage.imageCouverture }));
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error retrieving image.", data: error });
+    });
+});
+
+// PUT image route: updates/uploads bookcover image for a specific book
+OuvragesRouter.put("/:id/image", auth, upload.single('imageCouverture'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No image file provided" });
+  }
+
+  const imagePath = `/${req.file.filename}`;
+
+  Ouvrage.findByPk(req.params.id)
+    .then(ouvrage => {
+      if (!ouvrage) {
+        return res.status(404).json({ message: "Book not found to update image." });
+      }
+      return ouvrage.update({ imageCouverture: imagePath }).then(updated => {
+        res.json(success("Image updated successfully", updated));
+      });
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Could not update image.", data: error });
+    });
+});
 
 export { OuvragesRouter };
