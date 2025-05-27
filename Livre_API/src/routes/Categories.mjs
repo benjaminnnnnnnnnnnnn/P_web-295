@@ -48,7 +48,7 @@ const CategoriesRouter = express();
 *                     example: Categorie 1
 *
 */
-CategoriesRouter.get("/", auth, (req, res) => {
+CategoriesRouter.get("/", (req, res) => {
 	if (req.query.nom) {
 		if (req.query.nom.length < 2) {
 			const message = `Le terme de la recherche doit contenir au moins 2 caractères`;
@@ -115,7 +115,7 @@ CategoriesRouter.get("/", auth, (req, res) => {
 *                     example: Categorie 1
 *
 */
-CategoriesRouter.get("/:id", auth, (req, res) => {
+CategoriesRouter.get("/:id", (req, res) => {
 	Categorie.findByPk(req.params.id)
 		.then((Categorie) => {
 			if (Categorie === null) {

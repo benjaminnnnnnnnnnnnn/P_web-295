@@ -115,7 +115,7 @@ const upload = multer({ storage: storage });
  *                     example: 1
  *
  */
-OuvragesRouter.get("/", auth, (req, res) => {
+OuvragesRouter.get("/", (req, res) => {
 	if (req.query.titre) {
 		if (req.query.titre.length < 1) {
 			const message = `Le terme de la recherche doit contenir au moins 2 caractères`;
@@ -904,7 +904,7 @@ OuvragesRouter.post("/:id/appreciations", auth, (req, res) => {
     });
 });
 
-OuvragesRouter.get("/:id/image", auth, (req, res) => {
+OuvragesRouter.get("/:id/image", (req, res) => {
   Ouvrage.findByPk(req.params.id)
     .then((ouvrage) => {
       if (!ouvrage || !ouvrage.imageCouverture) {
