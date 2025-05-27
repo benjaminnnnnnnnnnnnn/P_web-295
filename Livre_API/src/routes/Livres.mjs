@@ -134,7 +134,7 @@ OuvragesRouter.get("/", auth, (req, res) => {
 					titre: { [Op.like]: `%${req.query.titre}%` },
 					idCategorie: req.query.categorie,
 				},
-				order: ["titre"],
+				order: [["createdAt","DESC"],["titre", "DESC"]],
 				limit: limit,
 			}).then((Ouvrages) => {
 				const message = `Il y a ${Ouvrages.count} livre qui correspondent au terme de la recherche`;
@@ -144,7 +144,7 @@ OuvragesRouter.get("/", auth, (req, res) => {
 			return Ouvrage.findAndCountAll({
 				include: Categorie,
 				where: { titre: { [Op.like]: `%${req.query.titre}%` } },
-				order: ["titre"],
+				order: [["createdAt","DESC"],["titre", "ASC"]],
 				limit: limit,
 			}).then((Ouvrages) => {
 				const message = `Il y a ${Ouvrages.count} livre qui correspondent au terme de la recherche`;
@@ -161,14 +161,14 @@ OuvragesRouter.get("/", auth, (req, res) => {
 				titre: { [Op.like]: `%${req.query.titre}%` },
 				idCategorie: req.query.categorie,
 			},
-			order: ["titre"],
+			order: [["createdAt","DESC"],["titre", "ASC"]],
 		}).then((Ouvrages) => {
 			const message = `Il y a ${Ouvrages.count} livre qui correspondent au terme de la recherche`;
 			res.json(success(message, Ouvrages));
 		});
 	}
   else {
-	  Ouvrage.findAll({ include: Categorie, order: ["titre"] })
+	  Ouvrage.findAll({ include: Categorie, order: [["createdAt","DESC"],["titre", "ASC"]], })
 		.then((Ouvrages) => {
 		  const message = "La liste des livres a bien été récupérée.";
 		  res.json(success(message, Ouvrages));

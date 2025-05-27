@@ -76,6 +76,7 @@ const importOuvrages = () => {
       idCategorie: livre.idCategorie,
       idAuteur: livre.idAuteur,
       idEditeur: livre.idEditeur,
+      isNew:livre.isNew,
     }).then((livre) => console.log(livre.toJSON()));
   });
 

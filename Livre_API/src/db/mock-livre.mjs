@@ -11,6 +11,7 @@ let livres = [
         idCategorie: 1,
         idAuteur: 1,
         idEditeur: 1,
+		isNew: 0,
     },
     {
         idOurage: 2,
@@ -24,6 +25,7 @@ let livres = [
         idCategorie: 1,
         idAuteur: 2,
         idEditeur: 2,
+		isNew:1,
     },
     {
         idOurage: 3,
@@ -37,6 +39,7 @@ let livres = [
         idCategorie: 2,
         idAuteur: 3,
         idEditeur: 3,
+		isNew:0,
     },
     {
         idOurage: 4,
@@ -50,6 +53,7 @@ let livres = [
         idCategorie: 3,
         idAuteur: 4,
         idEditeur: 4,
+		isNew:0,
     },
     {
         idOurage: 5,
@@ -63,6 +67,7 @@ let livres = [
         idCategorie: 4,
         idAuteur: 5,
         idEditeur: 5,
+		isNew:0,
     },
 	{
 		idOurage: 6,
@@ -76,6 +81,7 @@ let livres = [
 		idCategorie: 1,
 		idAuteur: 1,
 		idEditeur: 1,
+		isNew:0,
 	},
 	{
 		idOurage: 7,
@@ -89,6 +95,7 @@ let livres = [
 		idCategorie: 1,
 		idAuteur: 1,
 		idEditeur: 1,
+		isNew:0,
 	},
 	{
 		idOurage: 8,
@@ -102,6 +109,7 @@ let livres = [
 		idCategorie: 1,
 		idAuteur: 1,
 		idEditeur: 1,
+		isNew:0,
 	},
 	{
 		idOurage: 9,
@@ -115,6 +123,7 @@ let livres = [
 		idCategorie: 2,
 		idAuteur: 3,
 		idEditeur: 3,
+		isNew:0,
 	},
 	{
 		idOurage: 10,
@@ -128,6 +137,7 @@ let livres = [
 		idCategorie: 2,
 		idAuteur: 3,
 		idEditeur: 3,
+		isNew:0,
 	},
 	{
 		idOurage: 11,
@@ -141,6 +151,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 2,
 		idEditeur: 2,
+		isNew:1,
 	},
 	{
 		idOurage: 12,
@@ -154,6 +165,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 5,
 		idEditeur: 5,
+		isNew:0,
 	},
 	{
 		idOurage: 13,
@@ -167,6 +179,7 @@ let livres = [
 		idCategorie: 3,
 		idAuteur: 4,
 		idEditeur: 4,
+		isNew:0,
 	},
 	{
 		idOurage: 14,
@@ -180,6 +193,7 @@ let livres = [
 		idCategorie: 2,
 		idAuteur: 3,
 		idEditeur: 3,
+		isNew:0,
 	},
 	{
 		idOurage: 15,
@@ -193,6 +207,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 6,
 		idEditeur: 6,
+		isNew:0,
 	},
 	{
 		idOurage: 16,
@@ -206,6 +221,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 7,
 		idEditeur: 7,
+		isNew:1,
 	},
 	{
 		idOurage: 17,
@@ -219,6 +235,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 8,
 		idEditeur: 8,
+		isNew:1,
 	},
 	{
 		idOurage: 18,
@@ -232,6 +249,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 8,
 		idEditeur: 8,
+		isNew:0,
 	},
 	{
 		idOurage: 19,
@@ -245,6 +263,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 9,
 		idEditeur: 9,
+		isNew:0,
 	},
 	{
 		idOurage: 20,
@@ -258,6 +277,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 10,
 		idEditeur: 10,
+		isNew:1,
 	},
 	{
 		idOurage: 21,
@@ -271,6 +291,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 11,
 		idEditeur: 11,
+		isNew:0,
 	},
 	{
 		idOurage: 22,
@@ -284,6 +305,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 12,
 		idEditeur: 12,
+		isNew:0,
 	},
 	{
 		idOurage: 23,
@@ -297,6 +319,7 @@ let livres = [
 		idCategorie: 1,
 		idAuteur: 13,
 		idEditeur: 13,
+		isNew:0,
 	},
 	{
 		idOurage: 24,
@@ -310,6 +333,7 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 14,
 		idEditeur: 14,
+		isNew:0,
 	},
 	{
 		idOurage: 25,
@@ -323,6 +347,8 @@ let livres = [
 		idCategorie: 4,
 		idAuteur: 15,
 		idEditeur: 15,
+		isNew:0,
+		createdAt:"2025-05-27 12:28:10"
 	}	
 ];
 
