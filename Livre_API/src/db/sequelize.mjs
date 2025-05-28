@@ -6,6 +6,7 @@ import { CategorieModel } from "../models/t_categorie.mjs";
 import { CommenterModel } from "../models/t_commenter.mjs";
 import { AuteurModel } from "../models/t_auteur.mjs";
 import { EditeurModel } from "../models/t_editeur.mjs";
+import { LivreBlobModel } from "../models/livreblob.mjs";
 import * as bcrypt from "bcrypt";
 
 const sequelize = new Sequelize("db_ouvrages", "root", "root", {
@@ -24,6 +25,7 @@ const Categorie = CategorieModel(sequelize, DataTypes);
 const Commenter = CommenterModel(sequelize, DataTypes);
 const Auteur = AuteurModel(sequelize, DataTypes);
 const Editeur = EditeurModel(sequelize, DataTypes);
+const Livreblob = LivreBlobModel(sequelize,DataTypes);
 
 //asociation
 Ouvrage.belongsTo(Categorie, { foreignKey: "idCategorie" });
@@ -52,6 +54,7 @@ let initDb = () => {
         .then(() => importAuteur())
         .then(() => importOuvrages())
         .then(() => importUsers())
+        .then(() => Livreblob.create({ idblob:0}))
         // Then import relational data that depends on users and books
         //.then(() => importAppercier())
         //.then(() => importCommenter())

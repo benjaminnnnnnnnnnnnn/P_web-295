@@ -1,5 +1,3 @@
-import { BOOLEAN } from "sequelize";
-
 const OuvrageModel = (sequelize, DataTypes) => {
 	return sequelize.define(
 	  "Ouvrage",
@@ -79,7 +77,7 @@ const OuvrageModel = (sequelize, DataTypes) => {
 		  isNew: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,
-		  }
+		  },
 	  },
 	  {
 		tableName: "t_ouvrage",

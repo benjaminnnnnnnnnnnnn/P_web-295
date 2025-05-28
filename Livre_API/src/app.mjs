@@ -65,6 +65,7 @@ app.use("/api/login", loginRouter);
 import { AuteursRouter } from "./routes/Auteur.mjs";
 app.use("/api/auteurs", AuteursRouter);
 
+
 // 404 handler
 app.use(({ res }) => {
   const message =
