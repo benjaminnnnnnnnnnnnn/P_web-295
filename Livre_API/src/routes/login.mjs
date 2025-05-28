@@ -61,7 +61,7 @@ loginRouter.post("/", (req, res) => {
 					} else {
 						// JWT
 						console.log (user.idUtilisateur);
-						const token = jwt.sign({ userId: user.idUtilisateur }, privateKey, {
+						const token = jwt.sign({ userId: user.idUtilisateur, nomUtilisateur: user.nomUtilisateur }, privateKey, {
 							expiresIn: "1y",
 						});
 						const message = `L'utilisateur a été connecté avec succès`;

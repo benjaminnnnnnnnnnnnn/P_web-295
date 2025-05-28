@@ -368,9 +368,8 @@ OuvragesRouter.get("/:id", auth, (req, res) => {
 OuvragesRouter.post("/", auth, upload.single("imageCouverture"), (req, res) => {
   const data = {
     ...req.body,
-    imageCouverture: req.file
-      ? `/public/bookCovers/${req.file.filename}`
-      : null,
+    imageCouverture: `/${req.file.filename}`
+
   };
 
   Ouvrage.create(data)
@@ -521,9 +520,21 @@ OuvragesRouter.delete("/:id", auth, (req, res) => {
  *        - idAuteur
  *        - idEditeur
  */
-OuvragesRouter.put("/:id", auth, (req, res) => {
+OuvragesRouter.put("/:id", auth, upload.single("imageCouverture"),(req, res) => {
   const OuvrageId = req.params.id;
-  Ouvrage.update(req.body, { where: { idOuvrage: OuvrageId } })
+  let data = { ...req.body};
+
+    if ( req.file){
+      data.imageCouverture = `/${req.file.filename}`;
+      /*Ouvrage.findByPk(OuvrageId). then((book) => {
+        var fs = require('fs');
+        var filePath = `public/bookcovers/${book.imageCouverture}`
+        fs.unlinkSync(filePath)
+      })*/
+    };
+
+
+  Ouvrage.update(data, { where: { idOuvrage: OuvrageId } })
     .then((_) => {
       return Ouvrage.findByPk(OuvrageId).then((updatedOuvrage) => {
         if (updatedOuvrage === null) {
@@ -904,54 +915,5 @@ OuvragesRouter.post("/:id/appreciations", auth, (req, res) => {
     });
 });
 
-OuvragesRouter.get("/:id/image", (req, res) => {
-  Ouvrage.findByPk(req.params.id)
-    .then((ouvrage) => {
-      if (!ouvrage || !ouvrage.imageCouverture) {
-        return res.status(404).json({ message: "Image not found" });
-      }
-      res.json(
-        success("Image retrieved successfully", {
-          imageCouverture: ouvrage.imageCouverture,
-        })
-      );
-    })
-    .catch((error) => {
-      res.status(500).json({ message: "Error retrieving image.", data: error });
-    });
-});
-
-// PUT image route: updates/uploads bookcover image for a specific book
-OuvragesRouter.put(
-  "/:id/image",
-  auth,
-  upload.single("imageCouverture"),
-  (req, res) => {
-    if (!req.file) {
-      return res.status(400).json({ message: "No image file provided" });
-    }
-
-    const imagePath = `/${req.file.filename}`;
-
-    Ouvrage.findByPk(req.params.id)
-      .then((ouvrage) => {
-        if (!ouvrage) {
-          return res
-            .status(404)
-            .json({ message: "Book not found to update image." });
-        }
-        return ouvrage
-          .update({ imageCouverture: imagePath })
-          .then((updated) => {
-            res.json(success("Image updated successfully", updated));
-          });
-      })
-      .catch((error) => {
-        res
-          .status(500)
-          .json({ message: "Could not update image.", data: error });
-      });
-  }
-);
 
 export { OuvragesRouter };

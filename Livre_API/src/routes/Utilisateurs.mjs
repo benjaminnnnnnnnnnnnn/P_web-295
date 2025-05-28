@@ -263,7 +263,7 @@ UserRouter.post("/", async (req, res) => {
 
     // Define the message for the API consumer
 
-    const token = jwt.sign({ userId: createdUser.idUtilisateur }, privateKey, {
+    const token = jwt.sign({ userId: createdUser.idUtilisateur, nomUtilisateur: createdUser.nomUtilisateur  }, privateKey, {
       expiresIn: "1y",
     });
     const message = `L'utilisateur ${createdUser.nomUtilisateur} a bien été créé !`;
